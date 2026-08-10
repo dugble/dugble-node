@@ -241,6 +241,49 @@ dugble.suppressions.batch.remove(...);
 
 Suppression lists use cursor pagination and can be filtered by `bounce`, `complaint`, or `manual` origin. Batch add and remove operations accept up to 100 items.
 
+## Broadcasts
+
+Create a broadcast from a segment and template:
+
+```ts
+const { data, error } = await dugble.broadcasts.create({
+  name: "August update",
+  segmentId: "segment_123",
+  topicId: "topic_123",
+  template: "newsletter",
+  variableBindings: { company: "Dugble" },
+});
+```
+
+Send it immediately or schedule it for later:
+
+```ts
+await dugble.broadcasts.send("broadcast_123");
+
+await dugble.broadcasts.send("broadcast_123", {
+  scheduledAt: new Date("2026-08-11T12:00:00Z"),
+});
+```
+
+The broadcasts resource exposes:
+
+```ts
+dugble.broadcasts.create(...);
+dugble.broadcasts.list(...);
+dugble.broadcasts.get(...);
+dugble.broadcasts.update(...);
+dugble.broadcasts.delete(...);
+dugble.broadcasts.preview(...);
+dugble.broadcasts.send(...);
+dugble.broadcasts.cancel(...);
+dugble.broadcasts.duplicate(...);
+dugble.broadcasts.recipients(...);
+dugble.broadcasts.exclusions(...);
+dugble.broadcasts.analytics(...);
+```
+
+Broadcast updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`.
+
 ## Idempotency
 
 Dugble automatically generates an idempotency key for email and SMS send operations, including batch sends.
