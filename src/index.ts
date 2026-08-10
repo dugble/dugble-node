@@ -21,16 +21,16 @@ export type {
   RequestOptions,
 } from "./interfaces.js";
 export { SmsBatch } from "./sms/batch.js";
-export { SmsResource } from "./sms/sms.js";
+export { Sms } from "./sms/sms.js";
 export type {
   ListSmsEventsOptions,
   ListSmsOptions,
   SendSmsOptions,
   SendSmsResponse,
-  Sms,
   SmsDestination,
   SmsEvent,
   SmsEventList,
   SmsFailure,
+  SmsMessage,
   UpdateSmsOptions,
 } from "./sms/types.js";
