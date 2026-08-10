@@ -62,7 +62,9 @@ describe("Templates", () => {
   it("lists templates with cursor pagination", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(response({ object: "list", data: [], has_more: false }));
+      .mockResolvedValue(
+        response({ object: "list", data: [], has_more: false }),
+      );
 
     const client = new Dugble("dgb_team_test");
     await client.templates.list({ limit: 20, after: "template_123" });
