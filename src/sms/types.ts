@@ -20,7 +20,7 @@ export interface SmsDestination {
   country: string;
 }
 
-export interface Sms {
+export interface SmsMessage {
   object: "sms";
   id: string;
   message_id: string | null;
