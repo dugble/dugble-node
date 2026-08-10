@@ -57,16 +57,11 @@ Network failures use the `NETWORK_ERROR` code. Invalid JSON responses use `INVAL
 
 ## Configuration
 
-The client accepts an API key and optional client configuration:
-
 ```ts
-const dugble = new Dugble("dgb_team_your_api_key", {
-  baseUrl: "https://api.dugble.com",
-  userAgent: "my-app/1.0.0",
-});
-```
+import { Dugble } from "@dugble/sdk";
 
-You can also pass an `AbortSignal` and custom headers through request options supported by resource methods.
+const dugble = new Dugble("dgb_team_your_api_key");
+```
 
 ## Email
 
