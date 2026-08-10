@@ -159,8 +159,27 @@ export function serializeSendEmail(payload: SendEmailOptions): SendEmailRequest 
   return result;
 }
 
-export class Emails {
+export class EmailBatch {
   constructor(private readonly client: Dugble) {}
+
+  send(
+    payload: SendEmailOptions[],
+    options: IdempotentRequestOptions = {},
+  ): Promise<DugbleResponse<SendEmailResponse[]>> {
+    return this.client.post<SendEmailResponse[]>(
+      "/emails/batch",
+      payload.map(serializeSendEmail),
+      options,
+    );
+  }
+}
+
+export class Emails {
+  readonly batch: EmailBatch;
+
+  constructor(private readonly client: Dugble) {
+    this.batch = new EmailBatch(client);
+  }
 
   send(
     payload: SendEmailOptions,
