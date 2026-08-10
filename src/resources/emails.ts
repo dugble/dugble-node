@@ -134,7 +134,9 @@ function serializeAttachment(
   return result;
 }
 
-export function serializeSendEmail(payload: SendEmailOptions): SendEmailRequest {
+export function serializeSendEmail(
+  payload: SendEmailOptions,
+): SendEmailRequest {
   const result: SendEmailRequest = {
     to: payload.to,
     subject: payload.subject,
