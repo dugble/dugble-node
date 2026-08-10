@@ -70,6 +70,24 @@ export interface EmailSummary {
   created_at: string;
 }
 
+export interface EmailEvent {
+  id: string;
+  type: string;
+  occurred_at: string;
+  provider?: string;
+  code?: string;
+  message?: string;
+}
+
+export interface EmailEventList {
+  object: "list";
+  data: EmailEvent[];
+}
+
+export interface ListEmailEventsOptions {
+  limit?: number;
+}
+
 export interface ListEmailsOptions {
   limit?: number;
   offset?: number;
