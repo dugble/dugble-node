@@ -35,8 +35,8 @@ describe("Broadcasts", () => {
         body: JSON.stringify({
           name: "August update",
           segment_id: "segment_123",
-          topic_id: "topic_123",
           template: "newsletter",
+          topic_id: "topic_123",
           variable_bindings: { company: "Dugble" },
         }),
       }),
