@@ -27,7 +27,7 @@ export class Sms {
     payload: SendSmsOptions,
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<SendSmsResponse>> {
-    return this.client.post<SendSmsResponse>(
+    return this.client.idempotentPost<SendSmsResponse>(
       "/sms",
       serializeSendSms(payload),
       options,
