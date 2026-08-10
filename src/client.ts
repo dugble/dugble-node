@@ -1,4 +1,5 @@
 import { version } from "../package.json";
+import { Emails } from "./emails/emails.js";
 import type {
   DugbleErrorResponse,
   DugbleResponse,
@@ -7,7 +8,7 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
-import { Emails } from "./resources/emails.js";
+import { SmsResource } from "./sms/sms.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
 const DEFAULT_USER_AGENT = `dugble-node/${version}`;
@@ -21,6 +22,7 @@ export class Dugble {
   readonly baseUrl: string;
   readonly userAgent: string;
   readonly emails: Emails;
+  readonly sms: SmsResource;
 
   readonly #apiKey: string;
 
@@ -35,6 +37,7 @@ export class Dugble {
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.emails = new Emails(this);
+    this.sms = new SmsResource(this);
   }
 
   async get<T>(
