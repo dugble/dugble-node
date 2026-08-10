@@ -92,6 +92,14 @@ export interface MutationResponse {
   id: string;
 }
 
+interface EmailAttachmentRequest {
+  content?: string;
+  filename?: string;
+  path?: string;
+  content_type?: string;
+  content_id?: string;
+}
+
 interface SendEmailRequest {
   from?: EmailAddress;
   to: EmailAddress | EmailAddress[];
@@ -102,40 +110,53 @@ interface SendEmailRequest {
   cc?: EmailAddress | EmailAddress[];
   bcc?: EmailAddress | EmailAddress[];
   headers?: Record<string, string>;
-  attachments?: Array<{
-    content?: string;
-    filename?: string;
-    path?: string;
-    content_type?: string;
-    content_id?: string;
-  }>;
+  attachments?: EmailAttachmentRequest[];
   tags?: EmailTag[];
   scheduled_at?: string;
   metadata?: Record<string, unknown>;
 }
 
+function serializeAttachment(
+  attachment: EmailAttachment,
+): EmailAttachmentRequest {
+  const result: EmailAttachmentRequest = {};
+
+  if (attachment.content !== undefined) result.content = attachment.content;
+  if (attachment.filename !== undefined) result.filename = attachment.filename;
+  if (attachment.path !== undefined) result.path = attachment.path;
+  if (attachment.contentType !== undefined) {
+    result.content_type = attachment.contentType;
+  }
+  if (attachment.contentId !== undefined) {
+    result.content_id = attachment.contentId;
+  }
+
+  return result;
+}
+
 export function serializeSendEmail(payload: SendEmailOptions): SendEmailRequest {
-  return {
-    from: payload.from,
+  const result: SendEmailRequest = {
     to: payload.to,
     subject: payload.subject,
-    html: payload.html,
-    text: payload.text,
-    reply_to: payload.replyTo,
-    cc: payload.cc,
-    bcc: payload.bcc,
-    headers: payload.headers,
-    attachments: payload.attachments?.map((attachment) => ({
-      content: attachment.content,
-      filename: attachment.filename,
-      path: attachment.path,
-      content_type: attachment.contentType,
-      content_id: attachment.contentId,
-    })),
-    tags: payload.tags,
-    scheduled_at: payload.scheduledAt,
-    metadata: payload.metadata,
   };
+
+  if (payload.from !== undefined) result.from = payload.from;
+  if (payload.html !== undefined) result.html = payload.html;
+  if (payload.text !== undefined) result.text = payload.text;
+  if (payload.replyTo !== undefined) result.reply_to = payload.replyTo;
+  if (payload.cc !== undefined) result.cc = payload.cc;
+  if (payload.bcc !== undefined) result.bcc = payload.bcc;
+  if (payload.headers !== undefined) result.headers = payload.headers;
+  if (payload.attachments !== undefined) {
+    result.attachments = payload.attachments.map(serializeAttachment);
+  }
+  if (payload.tags !== undefined) result.tags = payload.tags;
+  if (payload.scheduledAt !== undefined) {
+    result.scheduled_at = payload.scheduledAt;
+  }
+  if (payload.metadata !== undefined) result.metadata = payload.metadata;
+
+  return result;
 }
 
 export class Emails {
