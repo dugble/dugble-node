@@ -96,15 +96,13 @@ describe("ContactProperties", () => {
   });
 
   it("deletes a contact property", async () => {
-    const fetchMock = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(
-        response({
-          object: "contact_property",
-          id: "property_123",
-          deleted: true,
-        }),
-      );
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      response({
+        object: "contact_property",
+        id: "property_123",
+        deleted: true,
+      }),
+    );
 
     const client = new Dugble("dgb_team_test");
     await client.contactProperties.delete("property_123");
