@@ -58,12 +58,21 @@ const { data, error } = await dugble.emails.batch.send([
 ]);
 ```
 
+List delivery events for an email:
+
+```ts
+const { data, error } = await dugble.emails.events("email_123", {
+  limit: 20,
+});
+```
+
 The email resource currently exposes:
 
 ```ts
 dugble.emails.send(...);
 dugble.emails.get(...);
 dugble.emails.list(...);
+dugble.emails.events(...);
 dugble.emails.update(...);
 dugble.emails.cancel(...);
 dugble.emails.batch.send(...);
