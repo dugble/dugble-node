@@ -8,12 +8,10 @@ import type {
 } from "./types.js";
 
 export class ContactTopics {
-  constructor(
-    private readonly client: Dugble,
-    private readonly contactId: string,
-  ) {}
+  constructor(private readonly client: Dugble) {}
 
   list(
+    contactId: string,
     payload: ListContactTopicsOptions = {},
     options: RequestOptions = {},
   ): Promise<DugbleResponse<ContactTopicList>> {
@@ -25,17 +23,18 @@ export class ContactTopics {
 
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<ContactTopicList>(
-      `/contacts/${encodeURIComponent(this.contactId)}/topics${suffix}`,
+      `/contacts/${encodeURIComponent(contactId)}/topics${suffix}`,
       options,
     );
   }
 
   update(
+    contactId: string,
     payload: UpdateContactTopic[],
     options: RequestOptions = {},
   ): Promise<DugbleResponse<UpdateContactTopicsResponse>> {
     return this.client.patch<UpdateContactTopicsResponse>(
-      `/contacts/${encodeURIComponent(this.contactId)}/topics`,
+      `/contacts/${encodeURIComponent(contactId)}/topics`,
       payload,
       options,
     );
