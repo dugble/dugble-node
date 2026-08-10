@@ -115,7 +115,7 @@ export interface TemplatePreview {
 }
 
 export interface TemplateTestSendResponse {
-  object: "email";
+  object: string;
   id: string;
 }
 
