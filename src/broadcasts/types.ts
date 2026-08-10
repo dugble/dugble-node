@@ -55,7 +55,7 @@ export interface UpdateBroadcastOptions {
   revision: number;
   name?: string;
   segmentId?: string;
-  topicId?: string;
+  topicId?: string | null;
   template?: string;
   variableBindings?: Record<string, unknown>;
 }
@@ -142,7 +142,7 @@ export interface UpdateBroadcastRequest {
   revision: number;
   name?: string;
   segment_id?: string;
-  topic_id?: string;
+  topic_id?: string | null;
   template?: string;
   variable_bindings?: Record<string, unknown>;
 }
