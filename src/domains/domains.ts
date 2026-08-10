@@ -29,7 +29,10 @@ export class Domains {
     id: string,
     options: RequestOptions = {},
   ): Promise<DugbleResponse<Domain>> {
-    return this.client.get<Domain>(`/domains/${encodeURIComponent(id)}`, options);
+    return this.client.get<Domain>(
+      `/domains/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   verify(
