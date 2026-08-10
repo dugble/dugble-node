@@ -27,10 +27,11 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "format": "biome format --write .",
-    "check": "biome check . && npm test && npm run build",
+    "check": "biome check . && npm run typecheck && npm test && npm run build",
     "format:check": "biome format .",
     "check:write": "biome check --write .",
-    "ci": "biome ci ."
+    "ci": "biome ci .",
+    "typecheck": "tsc --noEmit"
   },
   "repository": {
     "type": "git",

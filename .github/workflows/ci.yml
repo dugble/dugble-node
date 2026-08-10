@@ -30,6 +30,9 @@ jobs:
       - name: Biome
         run: npm run ci
 
+      - name: Type check
+        run: npm run typecheck
+
       - name: Test
         run: npm test
 
