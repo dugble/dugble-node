@@ -16,6 +16,7 @@ import { Segments } from "./segments/segments.js";
 import { SenderIds } from "./sender-ids/sender-ids.js";
 import { Sms } from "./sms/sms.js";
 import { Suppressions } from "./suppressions/suppressions.js";
+import { Templates } from "./templates/templates.js";
 import { Topics } from "./topics/topics.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
@@ -39,6 +40,7 @@ export class Dugble {
   readonly suppressions: Suppressions;
   readonly broadcasts: Broadcasts;
   readonly campaigns: Campaigns;
+  readonly templates: Templates;
 
   readonly #apiKey: string;
 
@@ -62,6 +64,7 @@ export class Dugble {
     this.suppressions = new Suppressions(this);
     this.broadcasts = new Broadcasts(this);
     this.campaigns = new Campaigns(this);
+    this.templates = new Templates(this);
   }
 
   async get<T>(

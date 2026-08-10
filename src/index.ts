@@ -145,6 +145,36 @@ export type {
   SuppressionMutationResponse,
   SuppressionOrigin,
 } from "./suppressions/types.js";
+export { Templates } from "./templates/templates.js";
+export type {
+  CreateTemplateOptions,
+  CreateTemplateRequest,
+  ListTemplatesOptions,
+  ListTemplateVersionsOptions,
+  PreviewTemplateOptions,
+  PreviewTemplateRequest,
+  Template,
+  TemplateDeleteResponse,
+  TemplateList,
+  TemplateListItem,
+  TemplateMutationResponse,
+  TemplatePreview,
+  TemplateRevertResponse,
+  TemplateStatus,
+  TemplateTestSendResponse,
+  TemplateVariable,
+  TemplateVariableFallback,
+  TemplateVariableOptions,
+  TemplateVariableRequest,
+  TemplateVariableType,
+  TemplateVersion,
+  TemplateVersionVariable,
+  TestSendTemplateOptions,
+  TestSendTemplateRequest,
+  UpdateTemplateOptions,
+  UpdateTemplateRequest,
+} from "./templates/types.js";
+export { TemplateVersions } from "./templates/versions.js";
 export { Topics } from "./topics/topics.js";
 export type {
   CreateTopicOptions,
