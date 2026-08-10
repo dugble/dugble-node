@@ -7,7 +7,9 @@ import type {
 import { EmailBatch } from "./batch.js";
 import {
   type Email,
+  type EmailEventList,
   type EmailSummary,
+  type ListEmailEventsOptions,
   type ListEmailsOptions,
   type MutationResponse,
   type SendEmailOptions,
@@ -39,6 +41,25 @@ export class Emails {
     options: RequestOptions = {},
   ): Promise<DugbleResponse<Email>> {
     return this.client.get<Email>(`/emails/${encodeURIComponent(id)}`, options);
+  }
+
+  events(
+    id: string,
+    payload: ListEmailEventsOptions = {},
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<EmailEventList>> {
+    const query = new URLSearchParams();
+
+    if (payload.limit !== undefined) {
+      query.set("limit", String(payload.limit));
+    }
+
+    const suffix = query.size > 0 ? `?${query.toString()}` : "";
+
+    return this.client.get<EmailEventList>(
+      `/emails/${encodeURIComponent(id)}/events${suffix}`,
+      options,
+    );
   }
 
   list(
