@@ -1,4 +1,3 @@
-export { Broadcasts } from "./broadcasts/broadcasts.js";
 export type {
   Broadcast,
   BroadcastAnalytics,
@@ -9,18 +8,13 @@ export type {
   BroadcastRecipientStatus,
   BroadcastStatus,
   CreateBroadcastOptions,
-  CreateBroadcastRequest,
   DuplicateBroadcastOptions,
   ListBroadcastRecipientsOptions,
   ListBroadcastsOptions,
   PreviewBroadcastOptions,
-  PreviewBroadcastRequest,
   SendBroadcastOptions,
-  SendBroadcastRequest,
   UpdateBroadcastOptions,
-  UpdateBroadcastRequest,
 } from "./broadcasts/types.js";
-export { Campaigns } from "./campaigns/campaigns.js";
 export type {
   Campaign,
   CampaignAnalytics,
@@ -33,18 +27,14 @@ export type {
   CampaignSmsEncoding,
   CampaignStatus,
   CreateCampaignOptions,
-  CreateCampaignRequest,
   DuplicateCampaignOptions,
   ListCampaignRecipientsOptions,
   ListCampaignsOptions,
   SendCampaignOptions,
-  SendCampaignRequest,
   UpdateCampaignOptions,
-  UpdateCampaignRequest,
 } from "./campaigns/types.js";
 export type { DugbleOptions } from "./client.js";
 export { Dugble } from "./client.js";
-export { ContactProperties } from "./contact-properties/contact-properties.js";
 export type {
   ContactProperty,
   ContactPropertyDeleteResponse,
@@ -53,14 +43,9 @@ export type {
   ContactPropertyMutationResponse,
   ContactPropertyType,
   CreateContactPropertyOptions,
-  CreateContactPropertyRequest,
   ListContactPropertiesOptions,
   UpdateContactPropertyOptions,
-  UpdateContactPropertyRequest,
 } from "./contact-properties/types.js";
-export { Contacts } from "./contacts/contacts.js";
-export { ContactSegments } from "./contacts/segments.js";
-export { ContactTopics } from "./contacts/topics.js";
 export type {
   Contact,
   ContactSegmentMembership,
@@ -68,20 +53,16 @@ export type {
   ContactTopicList,
   ContactTopicSubscription,
   CreateContactOptions,
-  CreateContactRequest,
   ListContactsOptions,
   ListContactTopicsOptions,
   SmsConsentSource,
   SmsConsentStatus,
   UpdateContactOptions,
-  UpdateContactRequest,
   UpdateContactTopic,
   UpdateContactTopicsResponse,
 } from "./contacts/types.js";
-export { Domains } from "./domains/domains.js";
 export type {
   CreateDomainOptions,
-  CreateDomainRequest,
   CreateDomainResponse,
   Domain,
   DomainCapabilities,
@@ -92,8 +73,6 @@ export type {
   DomainTlsMode,
   DomainVerificationRecord,
 } from "./domains/types.js";
-export { EmailBatch } from "./emails/batch.js";
-export { Emails } from "./emails/emails.js";
 export type {
   Email,
   EmailAddress,
@@ -115,7 +94,6 @@ export type {
   IdempotentRequestOptions,
   RequestOptions,
 } from "./interfaces.js";
-export { Segments } from "./segments/segments.js";
 export type {
   CreateSegmentOptions,
   ListSegmentContactsOptions,
@@ -123,15 +101,11 @@ export type {
   Segment,
   SegmentContact,
 } from "./segments/types.js";
-export { SenderIds } from "./sender-ids/sender-ids.js";
 export type {
   CreateSenderIdOptions,
-  CreateSenderIdRequest,
   SenderId,
   SenderIdStatus,
 } from "./sender-ids/types.js";
-export { SmsBatch } from "./sms/batch.js";
-export { Sms } from "./sms/sms.js";
 export type {
   ListSmsEventsOptions,
   ListSmsOptions,
@@ -144,8 +118,6 @@ export type {
   SmsMessage,
   UpdateSmsOptions,
 } from "./sms/types.js";
-export { SuppressionBatch } from "./suppressions/batch.js";
-export { Suppressions } from "./suppressions/suppressions.js";
 export type {
   BatchAddSuppressionsOptions,
   BatchAddSuppressionsResponse,
@@ -159,14 +131,11 @@ export type {
   SuppressionMutationResponse,
   SuppressionOrigin,
 } from "./suppressions/types.js";
-export { Templates } from "./templates/templates.js";
 export type {
   CreateTemplateOptions,
-  CreateTemplateRequest,
   ListTemplatesOptions,
   ListTemplateVersionsOptions,
   PreviewTemplateOptions,
-  PreviewTemplateRequest,
   Template,
   TemplateDeleteResponse,
   TemplateList,
@@ -179,20 +148,14 @@ export type {
   TemplateVariable,
   TemplateVariableFallback,
   TemplateVariableOptions,
-  TemplateVariableRequest,
   TemplateVariableType,
   TemplateVersion,
   TemplateVersionVariable,
   TestSendTemplateOptions,
-  TestSendTemplateRequest,
   UpdateTemplateOptions,
-  UpdateTemplateRequest,
 } from "./templates/types.js";
-export { TemplateVersions } from "./templates/versions.js";
-export { Topics } from "./topics/topics.js";
 export type {
   CreateTopicOptions,
-  CreateTopicRequest,
   ListTopicsOptions,
   Topic,
   TopicDeleteResponse,
@@ -201,5 +164,4 @@ export type {
   TopicSubscription,
   TopicVisibility,
   UpdateTopicOptions,
-  UpdateTopicRequest,
 } from "./topics/types.js";
