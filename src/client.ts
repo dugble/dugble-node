@@ -135,62 +135,25 @@ export class Dugble {
     path: string,
     options: RequestInit,
   ): Promise<DugbleResponse<T>> {
-    const headers = new Headers({
-      Authorization: `Bearer ${this.#apiKey}`,
-      "Content-Type": "application/json",
-      "User-Agent": this.userAgent,
-    });
+    const headers = new Headers(options.headers);
 
-    new Headers(options.headers).forEach((value, key) => {
-      headers.set(key, value);
-    });
+    headers.set("Authorization", `Bearer ${this.#apiKey}`);
+    headers.set("Accept", "application/json");
+    headers.set("User-Agent", this.userAgent);
+
+    if (options.body !== undefined) {
+      headers.set("Content-Type", "application/json");
+    } else {
+      headers.delete("Content-Type");
+    }
+
+    let response: Response;
 
     try {
-      const response = await fetch(`${this.baseUrl}${path}`, {
+      response = await fetch(`${this.baseUrl}${path}`, {
         ...options,
         headers,
       });
-
-      const responseHeaders = Object.fromEntries(response.headers.entries());
-      const requestId =
-        response.headers.get("x-request-id") ??
-        response.headers.get("request-id") ??
-        undefined;
-
-      if (response.status === 204) {
-        return {
-          data: null,
-          error: null,
-          headers: responseHeaders,
-        };
-      }
-
-      const payload = (await response.json()) as
-        | SuccessEnvelope<T>
-        | ErrorEnvelope;
-
-      if (!response.ok || !payload.success) {
-        const errorPayload = payload as ErrorEnvelope;
-
-        return {
-          data: null,
-          error: {
-            code: errorPayload.error?.code ?? "APPLICATION_ERROR",
-            message:
-              errorPayload.error?.message ??
-              "The Dugble API could not process the request.",
-            statusCode: response.status,
-            ...(requestId ? { requestId } : {}),
-          },
-          headers: responseHeaders,
-        };
-      }
-
-      return {
-        data: payload.data,
-        error: null,
-        headers: responseHeaders,
-      };
     } catch (cause) {
       const error: DugbleErrorResponse = {
         code: "NETWORK_ERROR",
@@ -207,5 +170,60 @@ export class Dugble {
         headers: null,
       };
     }
+
+    const responseHeaders = Object.fromEntries(response.headers.entries());
+
+    const requestId =
+      response.headers.get("x-request-id") ??
+      response.headers.get("request-id") ??
+      undefined;
+
+    if (response.status === 204) {
+      return {
+        data: null,
+        error: null,
+        headers: responseHeaders,
+      };
+    }
+
+    let payload: SuccessEnvelope<T> | ErrorEnvelope;
+
+    try {
+      payload = (await response.json()) as SuccessEnvelope<T> | ErrorEnvelope;
+    } catch {
+      return {
+        data: null,
+        error: {
+          code: "INVALID_RESPONSE",
+          message: "The Dugble API returned an invalid JSON response.",
+          statusCode: response.status,
+          ...(requestId ? { requestId } : {}),
+        },
+        headers: responseHeaders,
+      };
+    }
+
+    if (!response.ok || !payload.success) {
+      const errorPayload = payload as ErrorEnvelope;
+
+      return {
+        data: null,
+        error: {
+          code: errorPayload.error?.code ?? "APPLICATION_ERROR",
+          message:
+            errorPayload.error?.message ??
+            "The Dugble API could not process the request.",
+          statusCode: response.status,
+          ...(requestId ? { requestId } : {}),
+        },
+        headers: responseHeaders,
+      };
+    }
+
+    return {
+      data: payload.data,
+      error: null,
+      headers: responseHeaders,
+    };
   }
 }
