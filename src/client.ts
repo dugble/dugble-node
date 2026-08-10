@@ -1,4 +1,5 @@
 import { version } from "../package.json";
+import { Contacts } from "./contacts/contacts.js";
 import { Domains } from "./domains/domains.js";
 import { Emails } from "./emails/emails.js";
 import type {
@@ -9,8 +10,11 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
+import { Segments } from "./segments/segments.js";
 import { SenderIds } from "./sender-ids/sender-ids.js";
 import { Sms } from "./sms/sms.js";
+import { Suppressions } from "./suppressions/suppressions.js";
+import { Topics } from "./topics/topics.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
 const DEFAULT_USER_AGENT = `dugble-node/${version}`;
@@ -27,6 +31,10 @@ export class Dugble {
   readonly sms: Sms;
   readonly domains: Domains;
   readonly senderIds: SenderIds;
+  readonly contacts: Contacts;
+  readonly topics: Topics;
+  readonly segments: Segments;
+  readonly suppressions: Suppressions;
 
   readonly #apiKey: string;
 
@@ -44,6 +52,10 @@ export class Dugble {
     this.sms = new Sms(this);
     this.domains = new Domains(this);
     this.senderIds = new SenderIds(this);
+    this.contacts = new Contacts(this);
+    this.topics = new Topics(this);
+    this.segments = new Segments(this);
+    this.suppressions = new Suppressions(this);
   }
 
   async get<T>(
@@ -192,10 +204,10 @@ export class Dugble {
       };
     }
 
-    let payload: SuccessEnvelope<T> | ErrorEnvelope;
+    let payload: unknown;
 
     try {
-      payload = (await response.json()) as SuccessEnvelope<T> | ErrorEnvelope;
+      payload = await response.json();
     } catch {
       return {
         data: null,
@@ -209,8 +221,14 @@ export class Dugble {
       };
     }
 
-    if (!response.ok || !payload.success) {
-      const errorPayload = payload as ErrorEnvelope;
+    const isEnvelope =
+      typeof payload === "object" &&
+      payload !== null &&
+      "success" in payload &&
+      typeof (payload as { success?: unknown }).success === "boolean";
+
+    if (!response.ok || (isEnvelope && !(payload as { success: boolean }).success)) {
+      const errorPayload = (isEnvelope ? payload : {}) as ErrorEnvelope;
 
       return {
         data: null,
@@ -226,8 +244,16 @@ export class Dugble {
       };
     }
 
+    if (isEnvelope) {
+      return {
+        data: (payload as SuccessEnvelope<T>).data,
+        error: null,
+        headers: responseHeaders,
+      };
+    }
+
     return {
-      data: payload.data,
+      data: payload as T,
       error: null,
       headers: responseHeaders,
     };
