@@ -228,6 +228,59 @@ describe("Emails", () => {
     );
   });
 
+  it("sends multiple emails with emails.batch.send", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(
+        JSON.stringify({
+          success: true,
+          data: [
+            { object: "email", id: "email_1" },
+            { object: "email", id: "email_2" },
+          ],
+        }),
+        { status: 202 },
+      ),
+    );
+
+    const client = new Dugble("dug_test_example");
+
+    const response = await client.emails.batch.send(
+      [
+        {
+          from: "Dugble <hello@example.com>",
+          to: ["foo@example.com"],
+          subject: "hello world",
+          html: "it works!",
+        },
+        {
+          from: "Dugble <hello@example.com>",
+          to: ["bar@example.com"],
+          subject: "world hello",
+          html: "it works!",
+        },
+      ],
+      { idempotencyKey: "batch_123" },
+    );
+
+    expect(response.error).toBeNull();
+    expect(response.data).toHaveLength(2);
+
+    const call = fetchMock.mock.calls.at(0);
+
+    if (!call) {
+      throw new Error("Expected fetch to be called once.");
+    }
+
+    const [url, options] = call;
+
+    expect(url).toBe("https://api.dugble.com/emails/batch");
+    expect(options?.method).toBe("POST");
+    expect(new Headers(options?.headers).get("Idempotency-Key")).toBe(
+      "batch_123",
+    );
+    expect(JSON.parse(String(options?.body))).toHaveLength(2);
+  });
+
   it("returns structured API errors", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
@@ -267,60 +320,5 @@ describe("Emails", () => {
       statusCode: 400,
       requestId: "req_123",
     });
-  });
-});
-
-describe("Batch", () => {
-  it("sends multiple emails", async () => {
-    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(
-        JSON.stringify({
-          success: true,
-          data: [
-            { object: "email", id: "email_1" },
-            { object: "email", id: "email_2" },
-          ],
-        }),
-        { status: 202 },
-      ),
-    );
-
-    const client = new Dugble("dug_test_example");
-
-    const response = await client.batch.send(
-      [
-        {
-          from: "Dugble <hello@example.com>",
-          to: ["foo@example.com"],
-          subject: "hello world",
-          html: "it works!",
-        },
-        {
-          from: "Dugble <hello@example.com>",
-          to: ["bar@example.com"],
-          subject: "world hello",
-          html: "it works!",
-        },
-      ],
-      { idempotencyKey: "batch_123" },
-    );
-
-    expect(response.error).toBeNull();
-    expect(response.data).toHaveLength(2);
-
-    const call = fetchMock.mock.calls.at(0);
-
-    if (!call) {
-      throw new Error("Expected fetch to be called once.");
-    }
-
-    const [url, options] = call;
-
-    expect(url).toBe("https://api.dugble.com/emails/batch");
-    expect(options?.method).toBe("POST");
-    expect(new Headers(options?.headers).get("Idempotency-Key")).toBe(
-      "batch_123",
-    );
-    expect(JSON.parse(String(options?.body))).toHaveLength(2);
   });
 });
