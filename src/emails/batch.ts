@@ -4,9 +4,9 @@ import type {
   IdempotentRequestOptions,
 } from "../interfaces.js";
 import {
-  serializeSendEmail,
   type SendEmailOptions,
   type SendEmailResponse,
+  serializeSendEmail,
 } from "./types.js";
 
 export class EmailBatch {

@@ -10,9 +10,9 @@ import {
   type EmailSummary,
   type ListEmailsOptions,
   type MutationResponse,
-  serializeSendEmail,
   type SendEmailOptions,
   type SendEmailResponse,
+  serializeSendEmail,
   type UpdateEmailOptions,
 } from "./types.js";
 

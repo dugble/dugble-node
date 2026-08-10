@@ -53,7 +53,9 @@ describe("SMS", () => {
 
   it("gets an SMS", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ success: true, data: {} }), { status: 200 }),
+      new Response(JSON.stringify({ success: true, data: {} }), {
+        status: 200,
+      }),
     );
 
     const client = new Dugble("dug_test_example");
@@ -68,7 +70,9 @@ describe("SMS", () => {
 
   it("lists SMS messages with pagination", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ success: true, data: [] }), { status: 200 }),
+      new Response(JSON.stringify({ success: true, data: [] }), {
+        status: 200,
+      }),
     );
 
     const client = new Dugble("dug_test_example");
@@ -158,7 +162,9 @@ describe("SMS", () => {
 
   it("syncs SMS status", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ success: true, data: {} }), { status: 200 }),
+      new Response(JSON.stringify({ success: true, data: {} }), {
+        status: 200,
+      }),
     );
 
     const client = new Dugble("dug_test_example");

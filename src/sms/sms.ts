@@ -8,11 +8,11 @@ import { SmsBatch } from "./batch.js";
 import {
   type ListSmsEventsOptions,
   type ListSmsOptions,
-  serializeSendSms,
   type SendSmsOptions,
   type SendSmsResponse,
   type SmsEventList,
   type SmsMessage,
+  serializeSendSms,
   type UpdateSmsOptions,
 } from "./types.js";
 
@@ -38,7 +38,10 @@ export class Sms {
     id: string,
     options: RequestOptions = {},
   ): Promise<DugbleResponse<SmsMessage>> {
-    return this.client.get<SmsMessage>(`/sms/${encodeURIComponent(id)}`, options);
+    return this.client.get<SmsMessage>(
+      `/sms/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   list(
