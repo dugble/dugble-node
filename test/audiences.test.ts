@@ -73,9 +73,11 @@ describe("Audiences", () => {
   });
 
   it("updates contact topics", async () => {
-    const fetchMock = vi
-      .spyOn(globalThis, "fetch")
-      .mockResolvedValue(new Response(JSON.stringify({ id: "contact_123" }), { status: 200 }));
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ id: "contact_123" }), {
+        status: 200,
+      }),
+    );
 
     const client = new Dugble("dgb_team_test");
     await client.contacts.topics.update("contact_123", [
@@ -123,7 +125,9 @@ describe("Audiences", () => {
   it("lists topics with cursor pagination", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(response({ object: "list", has_more: false, data: [] }));
+      .mockResolvedValue(
+        response({ object: "list", has_more: false, data: [] }),
+      );
 
     const client = new Dugble("dgb_team_test");
     await client.topics.list({ limit: 20, before: "topic_123" });
@@ -140,7 +144,10 @@ describe("Audiences", () => {
       .mockResolvedValue(response([]));
 
     const client = new Dugble("dgb_team_test");
-    await client.segments.contacts("segment/123", { limit: 50, offset: 10 });
+    await client.segments.contacts("segment/123", {
+      limit: 50,
+      offset: 10,
+    });
 
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/segments/segment%2F123/contacts?limit=50&offset=10",
