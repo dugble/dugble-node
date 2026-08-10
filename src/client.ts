@@ -204,10 +204,10 @@ export class Dugble {
       };
     }
 
-    let payload: unknown;
+    let payload: SuccessEnvelope<T> | ErrorEnvelope;
 
     try {
-      payload = await response.json();
+      payload = (await response.json()) as SuccessEnvelope<T> | ErrorEnvelope;
     } catch {
       return {
         data: null,
@@ -221,17 +221,8 @@ export class Dugble {
       };
     }
 
-    const isEnvelope =
-      typeof payload === "object" &&
-      payload !== null &&
-      "success" in payload &&
-      typeof (payload as { success?: unknown }).success === "boolean";
-
-    const failedEnvelope =
-      isEnvelope && !(payload as { success: boolean }).success;
-
-    if (!response.ok || failedEnvelope) {
-      const errorPayload = (isEnvelope ? payload : {}) as ErrorEnvelope;
+    if (!response.ok || !payload.success) {
+      const errorPayload = payload as ErrorEnvelope;
 
       return {
         data: null,
@@ -247,16 +238,8 @@ export class Dugble {
       };
     }
 
-    if (isEnvelope) {
-      return {
-        data: (payload as SuccessEnvelope<T>).data,
-        error: null,
-        headers: responseHeaders,
-      };
-    }
-
     return {
-      data: payload as T,
+      data: payload.data,
       error: null,
       headers: responseHeaders,
     };
