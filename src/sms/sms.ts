@@ -11,12 +11,12 @@ import {
   serializeSendSms,
   type SendSmsOptions,
   type SendSmsResponse,
-  type Sms,
   type SmsEventList,
+  type SmsMessage,
   type UpdateSmsOptions,
 } from "./types.js";
 
-export class SmsResource {
+export class Sms {
   readonly batch: SmsBatch;
 
   constructor(private readonly client: Dugble) {
@@ -37,14 +37,14 @@ export class SmsResource {
   get(
     id: string,
     options: RequestOptions = {},
-  ): Promise<DugbleResponse<Sms>> {
-    return this.client.get<Sms>(`/sms/${encodeURIComponent(id)}`, options);
+  ): Promise<DugbleResponse<SmsMessage>> {
+    return this.client.get<SmsMessage>(`/sms/${encodeURIComponent(id)}`, options);
   }
 
   list(
     payload: ListSmsOptions = {},
     options: RequestOptions = {},
-  ): Promise<DugbleResponse<Sms[]>> {
+  ): Promise<DugbleResponse<SmsMessage[]>> {
     const query = new URLSearchParams();
 
     if (payload.limit !== undefined) {
@@ -57,7 +57,7 @@ export class SmsResource {
 
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
 
-    return this.client.get<Sms[]>(`/sms${suffix}`, options);
+    return this.client.get<SmsMessage[]>(`/sms${suffix}`, options);
   }
 
   update(
@@ -106,8 +106,8 @@ export class SmsResource {
   syncStatus(
     id: string,
     options: RequestOptions = {},
-  ): Promise<DugbleResponse<Sms>> {
-    return this.client.post<Sms>(
+  ): Promise<DugbleResponse<SmsMessage>> {
+    return this.client.post<SmsMessage>(
       `/sms/${encodeURIComponent(id)}/sync-status`,
       undefined,
       options,
