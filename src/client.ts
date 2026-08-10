@@ -1,5 +1,3 @@
-import { randomUUID } from "node:crypto";
-
 import { version } from "../package.json";
 import { Emails } from "./emails/emails.js";
 import type {
@@ -82,7 +80,9 @@ export class Dugble {
 
     const headers = new Headers(optionHeaders);
     const key =
-      idempotencyKey ?? headers.get("Idempotency-Key") ?? randomUUID();
+      idempotencyKey ??
+      headers.get("Idempotency-Key") ??
+      globalThis.crypto.randomUUID();
 
     headers.set("Idempotency-Key", key);
 
