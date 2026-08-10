@@ -24,7 +24,8 @@ export class Segments {
   ): Promise<DugbleResponse<Segment[]>> {
     const query = new URLSearchParams();
     if (payload.limit !== undefined) query.set("limit", String(payload.limit));
-    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<Segment[]>(`/segments${suffix}`, options);
   }
@@ -33,7 +34,10 @@ export class Segments {
     id: string,
     options: RequestOptions = {},
   ): Promise<DugbleResponse<Segment>> {
-    return this.client.get<Segment>(`/segments/${encodeURIComponent(id)}`, options);
+    return this.client.get<Segment>(
+      `/segments/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   contacts(
@@ -43,7 +47,8 @@ export class Segments {
   ): Promise<DugbleResponse<SegmentContact[]>> {
     const query = new URLSearchParams();
     if (payload.limit !== undefined) query.set("limit", String(payload.limit));
-    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<SegmentContact[]>(
       `/segments/${encodeURIComponent(id)}/contacts${suffix}`,

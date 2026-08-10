@@ -85,9 +85,7 @@ describe("Audiences", () => {
       "https://api.dugble.com/contacts/contact_123/topics",
       expect.objectContaining({
         method: "PATCH",
-        body: JSON.stringify([
-          { id: "topic_123", subscription: "opt_out" },
-        ]),
+        body: JSON.stringify([{ id: "topic_123", subscription: "opt_out" }]),
       }),
     );
   });

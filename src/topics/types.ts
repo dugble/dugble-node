@@ -66,7 +66,8 @@ export function serializeCreateTopic(
     default_subscription: payload.defaultSubscription,
   };
 
-  if (payload.description !== undefined) result.description = payload.description;
+  if (payload.description !== undefined)
+    result.description = payload.description;
   if (payload.visibility !== undefined) result.visibility = payload.visibility;
   return result;
 }
@@ -77,7 +78,8 @@ export function serializeUpdateTopic(
   const result: UpdateTopicRequest = {};
 
   if (payload.name !== undefined) result.name = payload.name;
-  if (payload.description !== undefined) result.description = payload.description;
+  if (payload.description !== undefined)
+    result.description = payload.description;
   if (payload.visibility !== undefined) result.visibility = payload.visibility;
   return result;
 }

@@ -37,7 +37,8 @@ export class Contacts {
   ): Promise<DugbleResponse<Contact[]>> {
     const query = new URLSearchParams();
     if (payload.limit !== undefined) query.set("limit", String(payload.limit));
-    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<Contact[]>(`/contacts${suffix}`, options);
   }
@@ -46,7 +47,10 @@ export class Contacts {
     id: string,
     options: RequestOptions = {},
   ): Promise<DugbleResponse<Contact>> {
-    return this.client.get<Contact>(`/contacts/${encodeURIComponent(id)}`, options);
+    return this.client.get<Contact>(
+      `/contacts/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
   update(
