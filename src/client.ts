@@ -70,6 +70,7 @@ export class Dugble {
     this.templates = new Templates(this);
   }
 
+  /** @internal */
   async get<T>(
     path: string,
     options: RequestOptions = {},
@@ -80,6 +81,7 @@ export class Dugble {
     });
   }
 
+  /** @internal */
   async post<T>(
     path: string,
     body?: unknown,
@@ -97,6 +99,7 @@ export class Dugble {
     return this.request<T>(path, requestInit);
   }
 
+  /** @internal */
   async idempotentPost<T>(
     path: string,
     body?: unknown,
@@ -129,6 +132,7 @@ export class Dugble {
     return this.request<T>(path, requestInit);
   }
 
+  /** @internal */
   async patch<T>(
     path: string,
     body: unknown,
@@ -141,6 +145,7 @@ export class Dugble {
     });
   }
 
+  /** @internal */
   async delete<T>(
     path: string,
     options: RequestOptions = {},
