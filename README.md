@@ -3,7 +3,7 @@
 Official Node.js and TypeScript SDK for the Dugble API.
 
 > [!IMPORTANT]
-> The Dugble Node SDK is currently unreleased and is not yet published for production use. The public API, types, and package surface may change before the first release.
+> Dugble Node SDK is under active development. APIs may evolve between minor releases while the package is pre-1.0.
 
 ## Requirements
 
