@@ -45,18 +45,15 @@ describe("Audiences", () => {
     );
   });
 
-  it("lists contact topics and accepts the raw contact-topic response", async () => {
+  it("lists contact topics through the standard response envelope", async () => {
     const payload = {
       object: "list",
       has_more: false,
       data: [],
     };
-    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify(payload), {
-        status: 200,
-        headers: { "Content-Type": "application/json" },
-      }),
-    );
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(response(payload));
 
     const client = new Dugble("dgb_team_test");
     const result = await client.contacts.topics.list("contact/123", {
@@ -72,18 +69,18 @@ describe("Audiences", () => {
     );
   });
 
-  it("updates contact topics", async () => {
-    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
-      new Response(JSON.stringify({ id: "contact_123" }), {
-        status: 200,
-      }),
-    );
+  it("updates contact topics through the standard response envelope", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(response({ id: "contact_123" }));
 
     const client = new Dugble("dgb_team_test");
-    await client.contacts.topics.update("contact_123", [
+    const result = await client.contacts.topics.update("contact_123", [
       { id: "topic_123", subscription: "opt_out" },
     ]);
 
+    expect(result.data).toEqual({ id: "contact_123" });
+    expect(result.error).toBeNull();
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/contacts/contact_123/topics",
       expect.objectContaining({
@@ -91,6 +88,28 @@ describe("Audiences", () => {
         body: JSON.stringify([
           { id: "topic_123", subscription: "opt_out" },
         ]),
+      }),
+    );
+  });
+
+  it("rejects an unwrapped successful response", async () => {
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ id: "contact_123" }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const client = new Dugble("dgb_team_test");
+    const result = await client.contacts.topics.update("contact_123", [
+      { id: "topic_123", subscription: "opt_in" },
+    ]);
+
+    expect(result.data).toBeNull();
+    expect(result.error).toEqual(
+      expect.objectContaining({
+        code: "APPLICATION_ERROR",
+        statusCode: 200,
       }),
     );
   });
