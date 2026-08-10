@@ -2,17 +2,12 @@
 
 Official Node.js and TypeScript SDK for the Dugble API.
 
-> [!IMPORTANT]
-> Dugble Node SDK is under active development. APIs may evolve between minor releases while the package is pre-1.0.
-
 ## Requirements
 
 - Node.js 20 or later
 - A Dugble API key
 
 ## Installation
-
-The SDK is not yet published to npm. Once released, it will be available as `@dugble/sdk`.
 
 ```bash
 npm install @dugble/sdk
@@ -24,7 +19,54 @@ npm install @dugble/sdk
 import { Dugble } from "@dugble/sdk";
 
 const dugble = new Dugble("dgb_team_your_api_key");
+
+const { data, error } = await dugble.emails.send({
+  from: "Dugble <hello@example.com>",
+  to: ["customer@example.com"],
+  subject: "Hello from Dugble",
+  html: "<strong>It works!</strong>",
+});
+
+if (error) {
+  console.error(error.code, error.message);
+} else {
+  console.log(data);
+}
 ```
+
+## Responses and errors
+
+SDK methods return a structured response instead of throwing for API, network, or response parsing errors:
+
+```ts
+const { data, error, headers } = await dugble.emails.get("email_123");
+
+if (error) {
+  console.error({
+    code: error.code,
+    message: error.message,
+    statusCode: error.statusCode,
+    requestId: error.requestId,
+  });
+}
+```
+
+`data` is populated for successful requests, while `error` contains the normalized Dugble error for unsuccessful requests. Response headers are available through `headers` when a response was received.
+
+Network failures use the `NETWORK_ERROR` code. Invalid JSON responses use `INVALID_RESPONSE`.
+
+## Configuration
+
+The client accepts an API key and optional client configuration:
+
+```ts
+const dugble = new Dugble("dgb_team_your_api_key", {
+  baseUrl: "https://api.dugble.com",
+  userAgent: "my-app/1.0.0",
+});
+```
+
+You can also pass an `AbortSignal` and custom headers through request options supported by resource methods.
 
 ## Email
 
@@ -66,7 +108,7 @@ const { data, error } = await dugble.emails.events("email_123", {
 });
 ```
 
-The email resource currently exposes:
+Available email methods:
 
 ```ts
 dugble.emails.send(...);
@@ -107,7 +149,7 @@ const { data, error } = await dugble.sms.batch.send([
 ]);
 ```
 
-The SMS resource currently exposes:
+Available SMS methods:
 
 ```ts
 dugble.sms.send(...);
@@ -131,7 +173,7 @@ const { data, error } = await dugble.domains.create({
 });
 ```
 
-The domains resource exposes:
+Available domain methods:
 
 ```ts
 dugble.domains.create(...);
@@ -141,7 +183,7 @@ dugble.domains.verify(...);
 dugble.domains.delete(...);
 ```
 
-Domain creation can return either a domain resource or a provisioning response when Dugble is still preparing the email infrastructure for the team.
+Domain creation can return either a domain resource or a provisioning response while Dugble prepares the email infrastructure for the team.
 
 ## Sender IDs
 
@@ -155,7 +197,7 @@ const { data, error } = await dugble.senderIds.create({
 });
 ```
 
-The sender IDs resource exposes:
+Available sender ID methods:
 
 ```ts
 dugble.senderIds.create(...);
@@ -176,7 +218,7 @@ const { data, error } = await dugble.contacts.create({
 });
 ```
 
-Contact topics and segment memberships are available as nested resources:
+Available contact methods and nested resources:
 
 ```ts
 dugble.contacts.create(...);
@@ -187,14 +229,15 @@ dugble.contacts.delete(...);
 
 dugble.contacts.topics.list(...);
 dugble.contacts.topics.update(...);
+
 dugble.contacts.segments.list(...);
 dugble.contacts.segments.add(...);
 dugble.contacts.segments.remove(...);
 ```
 
-## Contact Properties
+## Contact properties
 
-Define reusable typed properties for contacts:
+Define a reusable typed contact property:
 
 ```ts
 const { data, error } = await dugble.contactProperties.create({
@@ -204,7 +247,7 @@ const { data, error } = await dugble.contactProperties.create({
 });
 ```
 
-The contact properties resource exposes:
+Available contact property methods:
 
 ```ts
 dugble.contactProperties.create(...);
@@ -214,7 +257,7 @@ dugble.contactProperties.update(...);
 dugble.contactProperties.delete(...);
 ```
 
-Contact property lists use cursor pagination with `after` and `before`. Updates change only the fallback value; pass `fallbackValue: null` to clear it.
+Contact property lists use cursor pagination with `after` and `before`. Pass `fallbackValue: null` to clear a fallback value during an update.
 
 ## Topics
 
@@ -252,7 +295,7 @@ const { data, error } = await dugble.suppressions.create({
 });
 ```
 
-The suppressions resource exposes:
+Available suppression methods:
 
 ```ts
 dugble.suppressions.create(...);
@@ -279,7 +322,7 @@ const { data, error } = await dugble.broadcasts.create({
 });
 ```
 
-Send it immediately or schedule it for later:
+Send immediately or schedule for later:
 
 ```ts
 await dugble.broadcasts.send("broadcast_123");
@@ -289,7 +332,7 @@ await dugble.broadcasts.send("broadcast_123", {
 });
 ```
 
-The broadcasts resource exposes:
+Available broadcast methods:
 
 ```ts
 dugble.broadcasts.create(...);
@@ -321,7 +364,7 @@ const { data, error } = await dugble.campaigns.create({
 });
 ```
 
-Send it immediately or schedule it through the same send endpoint:
+Send immediately or schedule for later:
 
 ```ts
 await dugble.campaigns.send("campaign_123");
@@ -331,7 +374,7 @@ await dugble.campaigns.send("campaign_123", {
 });
 ```
 
-The campaigns resource exposes:
+Available campaign methods:
 
 ```ts
 dugble.campaigns.create(...);
@@ -339,19 +382,17 @@ dugble.campaigns.list(...);
 dugble.campaigns.get(...);
 dugble.campaigns.update(...);
 dugble.campaigns.delete(...);
-
 dugble.campaigns.preview(...);
 dugble.campaigns.send(...);
 dugble.campaigns.cancel(...);
 dugble.campaigns.duplicate(...);
-
 dugble.campaigns.recipients(...);
 dugble.campaigns.costEstimate(...);
 dugble.campaigns.exclusions(...);
 dugble.campaigns.analytics(...);
 ```
 
-Campaign updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`. Setting `dailySendLimit` to `0` on an update clears an existing daily send limit.
+Campaign updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`. Setting `dailySendLimit` to `0` clears an existing daily send limit.
 
 ## Templates
 
@@ -383,7 +424,7 @@ await dugble.templates.preview("welcome", {
 await dugble.templates.publish("welcome");
 ```
 
-Template version history is available as a nested resource:
+Available template methods and version history:
 
 ```ts
 dugble.templates.create(...);
@@ -391,7 +432,6 @@ dugble.templates.list(...);
 dugble.templates.get(...);
 dugble.templates.update(...);
 dugble.templates.delete(...);
-
 dugble.templates.publish(...);
 dugble.templates.duplicate(...);
 dugble.templates.preview(...);
@@ -430,13 +470,15 @@ npm install
 npm run check
 ```
 
-Individual development commands are also available:
+Additional commands:
 
 ```bash
 npm run typecheck
 npm test
+npm run test:coverage
 npm run build
 npm run ci
+npm run release:check
 ```
 
 ## License
