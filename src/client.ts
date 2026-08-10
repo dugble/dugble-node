@@ -227,7 +227,10 @@ export class Dugble {
       "success" in payload &&
       typeof (payload as { success?: unknown }).success === "boolean";
 
-    if (!response.ok || (isEnvelope && !(payload as { success: boolean }).success)) {
+    const failedEnvelope =
+      isEnvelope && !(payload as { success: boolean }).success;
+
+    if (!response.ok || failedEnvelope) {
       const errorPayload = (isEnvelope ? payload : {}) as ErrorEnvelope;
 
       return {
