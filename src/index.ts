@@ -6,7 +6,6 @@ export type {
   IdempotentRequestOptions,
   RequestOptions,
 } from "./interfaces.js";
-export { Batch } from "./resources/batch.js";
 export type {
   Email,
   EmailAddress,
@@ -19,4 +18,4 @@ export type {
   SendEmailResponse,
   UpdateEmailOptions,
 } from "./resources/emails.js";
-export { Emails } from "./resources/emails.js";
+export { EmailBatch, Emails } from "./resources/emails.js";
