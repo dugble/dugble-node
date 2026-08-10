@@ -21,14 +21,12 @@ export class Dugble {
       );
     }
 
-    this.#apiKey = apiKey;
+    this.#apiKey = apiKey.trim();
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
   }
 
   /**
-   * Returns the authorization headers used by Dugble resources.
-   *
-   * Keep this internal once resource classes are introduced.
+   * Returns the authorization headers used for Dugble API requests.
    */
   protected getHeaders(): Headers {
     return new Headers({
