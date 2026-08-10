@@ -27,7 +27,7 @@ export class Emails {
     payload: SendEmailOptions,
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<SendEmailResponse>> {
-    return this.client.post<SendEmailResponse>(
+    return this.client.idempotentPost<SendEmailResponse>(
       "/emails",
       serializeSendEmail(payload),
       options,
