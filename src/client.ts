@@ -7,6 +7,7 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
+import { Batch } from "./resources/batch.js";
 import { Emails } from "./resources/emails.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
@@ -21,6 +22,7 @@ export class Dugble {
   readonly baseUrl: string;
   readonly userAgent: string;
   readonly emails: Emails;
+  readonly batch: Batch;
 
   readonly #apiKey: string;
 
@@ -35,6 +37,7 @@ export class Dugble {
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.emails = new Emails(this);
+    this.batch = new Batch(this);
   }
 
   async get<T>(
