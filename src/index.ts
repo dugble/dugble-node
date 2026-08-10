@@ -1,5 +1,27 @@
 export type { DugbleOptions } from "./client.js";
 export { Dugble } from "./client.js";
+export { Broadcasts } from "./broadcasts/broadcasts.js";
+export type {
+  Broadcast,
+  BroadcastAnalytics,
+  BroadcastExclusionReason,
+  BroadcastExclusionSummary,
+  BroadcastPreview,
+  BroadcastRecipient,
+  BroadcastRecipientStatus,
+  BroadcastStatus,
+  CreateBroadcastOptions,
+  CreateBroadcastRequest,
+  DuplicateBroadcastOptions,
+  ListBroadcastRecipientsOptions,
+  ListBroadcastsOptions,
+  PreviewBroadcastOptions,
+  PreviewBroadcastRequest,
+  SendBroadcastOptions,
+  SendBroadcastRequest,
+  UpdateBroadcastOptions,
+  UpdateBroadcastRequest,
+} from "./broadcasts/types.js";
 export { Contacts } from "./contacts/contacts.js";
 export { ContactSegments } from "./contacts/segments.js";
 export { ContactTopics } from "./contacts/topics.js";
