@@ -16,7 +16,7 @@ export class EmailBatch {
     payload: SendEmailOptions[],
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<SendEmailResponse[]>> {
-    return this.client.post<SendEmailResponse[]>(
+    return this.client.idempotentPost<SendEmailResponse[]>(
       "/emails/batch",
       payload.map(serializeSendEmail),
       options,
