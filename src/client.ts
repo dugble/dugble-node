@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 import { version } from "../package.json";
 import { Emails } from "./emails/emails.js";
 import type {
@@ -53,6 +55,23 @@ export class Dugble {
   async post<T>(
     path: string,
     body?: unknown,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<T>> {
+    const requestInit: RequestInit = {
+      ...options,
+      method: "POST",
+    };
+
+    if (body !== undefined) {
+      requestInit.body = this.serializeBody(body);
+    }
+
+    return this.request<T>(path, requestInit);
+  }
+
+  async idempotentPost<T>(
+    path: string,
+    body?: unknown,
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<T>> {
     const {
@@ -62,10 +81,10 @@ export class Dugble {
     } = options;
 
     const headers = new Headers(optionHeaders);
+    const key =
+      idempotencyKey ?? headers.get("Idempotency-Key") ?? randomUUID();
 
-    if (idempotencyKey) {
-      headers.set("Idempotency-Key", idempotencyKey);
-    }
+    headers.set("Idempotency-Key", key);
 
     const requestInit: RequestInit = {
       ...requestOptions,
