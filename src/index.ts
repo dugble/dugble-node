@@ -44,6 +44,20 @@ export type {
 } from "./campaigns/types.js";
 export type { DugbleOptions } from "./client.js";
 export { Dugble } from "./client.js";
+export { ContactProperties } from "./contact-properties/contact-properties.js";
+export type {
+  ContactProperty,
+  ContactPropertyDeleteResponse,
+  ContactPropertyFallback,
+  ContactPropertyList,
+  ContactPropertyMutationResponse,
+  ContactPropertyType,
+  CreateContactPropertyOptions,
+  CreateContactPropertyRequest,
+  ListContactPropertiesOptions,
+  UpdateContactPropertyOptions,
+  UpdateContactPropertyRequest,
+} from "./contact-properties/types.js";
 export { Contacts } from "./contacts/contacts.js";
 export { ContactSegments } from "./contacts/segments.js";
 export { ContactTopics } from "./contacts/topics.js";

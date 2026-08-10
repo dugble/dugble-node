@@ -1,6 +1,7 @@
 import { version } from "../package.json";
 import { Broadcasts } from "./broadcasts/broadcasts.js";
 import { Campaigns } from "./campaigns/campaigns.js";
+import { ContactProperties } from "./contact-properties/contact-properties.js";
 import { Contacts } from "./contacts/contacts.js";
 import { Domains } from "./domains/domains.js";
 import { Emails } from "./emails/emails.js";
@@ -35,6 +36,7 @@ export class Dugble {
   readonly domains: Domains;
   readonly senderIds: SenderIds;
   readonly contacts: Contacts;
+  readonly contactProperties: ContactProperties;
   readonly topics: Topics;
   readonly segments: Segments;
   readonly suppressions: Suppressions;
@@ -59,6 +61,7 @@ export class Dugble {
     this.domains = new Domains(this);
     this.senderIds = new SenderIds(this);
     this.contacts = new Contacts(this);
+    this.contactProperties = new ContactProperties(this);
     this.topics = new Topics(this);
     this.segments = new Segments(this);
     this.suppressions = new Suppressions(this);

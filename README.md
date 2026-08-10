@@ -192,6 +192,30 @@ dugble.contacts.segments.add(...);
 dugble.contacts.segments.remove(...);
 ```
 
+## Contact Properties
+
+Define reusable typed properties for contacts:
+
+```ts
+const { data, error } = await dugble.contactProperties.create({
+  key: "company_name",
+  type: "string",
+  fallbackValue: "Unknown",
+});
+```
+
+The contact properties resource exposes:
+
+```ts
+dugble.contactProperties.create(...);
+dugble.contactProperties.list(...);
+dugble.contactProperties.get(...);
+dugble.contactProperties.update(...);
+dugble.contactProperties.delete(...);
+```
+
+Contact property lists use cursor pagination with `after` and `before`. Updates change only the fallback value; pass `fallbackValue: null` to clear it.
+
 ## Topics
 
 Topics represent subscription categories for contacts.
