@@ -21,8 +21,12 @@
   "engines": {
     "node": ">=20"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
+    "prepublishOnly": "npm run check",
     "lint": "biome lint .",
     "test": "vitest run",
     "test:watch": "vitest",
@@ -35,14 +39,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/dugble/dugble-node.git"
+    "url": "git+https://github.com/dugble/dugble-node.git"
   },
   "bugs": {
     "url": "https://github.com/dugble/dugble-node/issues"
   },
   "homepage": "https://github.com/dugble/dugble-node#readme",
   "devDependencies": {
-    "@biomejs/biome": "2.5.7",
+    "@biomejs/biome": "2.5.5",
     "@types/node": "^26.2.0",
     "@vitest/coverage-v8": "^4.1.10",
     "tsup": "^8.5.1",
