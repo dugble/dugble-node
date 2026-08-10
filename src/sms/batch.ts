@@ -16,7 +16,7 @@ export class SmsBatch {
     payload: SendSmsOptions[],
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<SendSmsResponse[]>> {
-    return this.client.post<SendSmsResponse[]>(
+    return this.client.idempotentPost<SendSmsResponse[]>(
       "/sms/batch",
       payload.map(serializeSendSms),
       options,
