@@ -16,8 +16,8 @@ export interface EmailAttachment {
   content?: string;
   filename?: string;
   path?: string;
-  content_type?: string;
-  content_id?: string;
+  contentType?: string;
+  contentId?: string;
 }
 
 export interface EmailTag {
@@ -31,13 +31,13 @@ export interface SendEmailOptions {
   subject: string;
   html?: string;
   text?: string;
-  reply_to?: EmailAddress | EmailAddress[];
+  replyTo?: EmailAddress | EmailAddress[];
   cc?: EmailAddress | EmailAddress[];
   bcc?: EmailAddress | EmailAddress[];
   headers?: Record<string, string>;
   attachments?: EmailAttachment[];
   tags?: EmailTag[];
-  scheduled_at?: string;
+  scheduledAt?: string;
   metadata?: Record<string, unknown>;
 }
 
@@ -64,13 +64,78 @@ export interface Email {
   tags: EmailTag[];
 }
 
+export interface EmailSummary {
+  id: string;
+  to_email: string;
+  to_name: string | null;
+  subject: string;
+  status: string;
+  provider: string | null;
+  queued_at: string;
+  submitted_at: string | null;
+  delivered_at: string | null;
+  created_at: string;
+}
+
+export interface ListEmailsOptions {
+  limit?: number;
+  offset?: number;
+}
+
 export interface UpdateEmailOptions {
-  scheduled_at: string;
+  id: string;
+  scheduledAt: string;
 }
 
 export interface MutationResponse {
   object: "email";
   id: string;
+}
+
+interface SendEmailRequest {
+  from?: EmailAddress;
+  to: EmailAddress | EmailAddress[];
+  subject: string;
+  html?: string;
+  text?: string;
+  reply_to?: EmailAddress | EmailAddress[];
+  cc?: EmailAddress | EmailAddress[];
+  bcc?: EmailAddress | EmailAddress[];
+  headers?: Record<string, string>;
+  attachments?: Array<{
+    content?: string;
+    filename?: string;
+    path?: string;
+    content_type?: string;
+    content_id?: string;
+  }>;
+  tags?: EmailTag[];
+  scheduled_at?: string;
+  metadata?: Record<string, unknown>;
+}
+
+export function serializeSendEmail(payload: SendEmailOptions): SendEmailRequest {
+  return {
+    from: payload.from,
+    to: payload.to,
+    subject: payload.subject,
+    html: payload.html,
+    text: payload.text,
+    reply_to: payload.replyTo,
+    cc: payload.cc,
+    bcc: payload.bcc,
+    headers: payload.headers,
+    attachments: payload.attachments?.map((attachment) => ({
+      content: attachment.content,
+      filename: attachment.filename,
+      path: attachment.path,
+      content_type: attachment.contentType,
+      content_id: attachment.contentId,
+    })),
+    tags: payload.tags,
+    scheduled_at: payload.scheduledAt,
+    metadata: payload.metadata,
+  };
 }
 
 export class Emails {
@@ -80,7 +145,11 @@ export class Emails {
     payload: SendEmailOptions,
     options: IdempotentRequestOptions = {},
   ): Promise<DugbleResponse<SendEmailResponse>> {
-    return this.client.post<SendEmailResponse>("/emails", payload, options);
+    return this.client.post<SendEmailResponse>(
+      "/emails",
+      serializeSendEmail(payload),
+      options,
+    );
   }
 
   get(
@@ -90,14 +159,34 @@ export class Emails {
     return this.client.get<Email>(`/emails/${encodeURIComponent(id)}`, options);
   }
 
+  list(
+    payload: ListEmailsOptions = {},
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<EmailSummary[]>> {
+    const query = new URLSearchParams();
+
+    if (payload.limit !== undefined) {
+      query.set("limit", String(payload.limit));
+    }
+
+    if (payload.offset !== undefined) {
+      query.set("offset", String(payload.offset));
+    }
+
+    const suffix = query.size > 0 ? `?${query.toString()}` : "";
+
+    return this.client.get<EmailSummary[]>(`/emails${suffix}`, options);
+  }
+
   update(
-    id: string,
     payload: UpdateEmailOptions,
     options: RequestOptions = {},
   ): Promise<DugbleResponse<MutationResponse>> {
     return this.client.patch<MutationResponse>(
-      `/emails/${encodeURIComponent(id)}`,
-      payload,
+      `/emails/${encodeURIComponent(payload.id)}`,
+      {
+        scheduled_at: payload.scheduledAt,
+      },
       options,
     );
   }
