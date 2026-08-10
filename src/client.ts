@@ -1,4 +1,5 @@
 import { version } from "../package.json";
+import { Broadcasts } from "./broadcasts/broadcasts.js";
 import { Contacts } from "./contacts/contacts.js";
 import { Domains } from "./domains/domains.js";
 import { Emails } from "./emails/emails.js";
@@ -35,6 +36,7 @@ export class Dugble {
   readonly topics: Topics;
   readonly segments: Segments;
   readonly suppressions: Suppressions;
+  readonly broadcasts: Broadcasts;
 
   readonly #apiKey: string;
 
@@ -56,6 +58,7 @@ export class Dugble {
     this.topics = new Topics(this);
     this.segments = new Segments(this);
     this.suppressions = new Suppressions(this);
+    this.broadcasts = new Broadcasts(this);
   }
 
   async get<T>(
