@@ -1,5 +1,25 @@
 export type { DugbleOptions } from "./client.js";
 export { Dugble } from "./client.js";
+export { Contacts } from "./contacts/contacts.js";
+export { ContactSegments } from "./contacts/segments.js";
+export { ContactTopics } from "./contacts/topics.js";
+export type {
+  Contact,
+  ContactSegmentMembership,
+  ContactTopic,
+  ContactTopicList,
+  ContactTopicSubscription,
+  CreateContactOptions,
+  CreateContactRequest,
+  ListContactsOptions,
+  ListContactTopicsOptions,
+  SmsConsentSource,
+  SmsConsentStatus,
+  UpdateContactOptions,
+  UpdateContactRequest,
+  UpdateContactTopic,
+  UpdateContactTopicsResponse,
+} from "./contacts/types.js";
 export { Domains } from "./domains/domains.js";
 export type {
   CreateDomainOptions,
@@ -37,6 +57,14 @@ export type {
   IdempotentRequestOptions,
   RequestOptions,
 } from "./interfaces.js";
+export { Segments } from "./segments/segments.js";
+export type {
+  CreateSegmentOptions,
+  ListSegmentContactsOptions,
+  ListSegmentsOptions,
+  Segment,
+  SegmentContact,
+} from "./segments/types.js";
 export { SenderIds } from "./sender-ids/sender-ids.js";
 export type {
   CreateSenderIdOptions,
@@ -58,3 +86,32 @@ export type {
   SmsMessage,
   UpdateSmsOptions,
 } from "./sms/types.js";
+export { SuppressionBatch } from "./suppressions/batch.js";
+export { Suppressions } from "./suppressions/suppressions.js";
+export type {
+  BatchAddSuppressionsOptions,
+  BatchAddSuppressionsResponse,
+  BatchRemoveSuppressionsOptions,
+  BatchRemoveSuppressionsResponse,
+  CreateSuppressionOptions,
+  ListSuppressionsOptions,
+  Suppression,
+  SuppressionDeleteResponse,
+  SuppressionList,
+  SuppressionMutationResponse,
+  SuppressionOrigin,
+} from "./suppressions/types.js";
+export { Topics } from "./topics/topics.js";
+export type {
+  CreateTopicOptions,
+  CreateTopicRequest,
+  ListTopicsOptions,
+  Topic,
+  TopicDeleteResponse,
+  TopicList,
+  TopicMutationResponse,
+  TopicSubscription,
+  TopicVisibility,
+  UpdateTopicOptions,
+  UpdateTopicRequest,
+} from "./topics/types.js";

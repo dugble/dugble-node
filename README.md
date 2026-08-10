@@ -164,6 +164,83 @@ dugble.senderIds.get(...);
 dugble.senderIds.delete(...);
 ```
 
+## Contacts
+
+Create a contact:
+
+```ts
+const { data, error } = await dugble.contacts.create({
+  email: "ada@example.com",
+  firstName: "Ada",
+  properties: { plan: "pro" },
+});
+```
+
+Contact topics and segment memberships are available as nested resources:
+
+```ts
+dugble.contacts.create(...);
+dugble.contacts.list(...);
+dugble.contacts.get(...);
+dugble.contacts.update(...);
+dugble.contacts.delete(...);
+
+dugble.contacts.topics.list(...);
+dugble.contacts.topics.update(...);
+dugble.contacts.segments.list(...);
+dugble.contacts.segments.add(...);
+dugble.contacts.segments.remove(...);
+```
+
+## Topics
+
+Topics represent subscription categories for contacts.
+
+```ts
+dugble.topics.create(...);
+dugble.topics.list(...);
+dugble.topics.get(...);
+dugble.topics.update(...);
+dugble.topics.delete(...);
+```
+
+Topic lists use cursor pagination with `after` and `before`.
+
+## Segments
+
+Segments group contacts into reusable audiences.
+
+```ts
+dugble.segments.create(...);
+dugble.segments.list(...);
+dugble.segments.get(...);
+dugble.segments.contacts(...);
+dugble.segments.delete(...);
+```
+
+## Suppressions
+
+Create a manual email suppression:
+
+```ts
+const { data, error } = await dugble.suppressions.create({
+  email: "recipient@example.com",
+});
+```
+
+The suppressions resource exposes:
+
+```ts
+dugble.suppressions.create(...);
+dugble.suppressions.list(...);
+dugble.suppressions.get(...);
+dugble.suppressions.delete(...);
+dugble.suppressions.batch.add(...);
+dugble.suppressions.batch.remove(...);
+```
+
+Suppression lists use cursor pagination and can be filtered by `bounce`, `complaint`, or `manual` origin. Batch add and remove operations accept up to 100 items.
+
 ## Idempotency
 
 Dugble automatically generates an idempotency key for email and SMS send operations, including batch sends.

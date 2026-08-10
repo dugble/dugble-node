@@ -1,4 +1,5 @@
 import { version } from "../package.json";
+import { Contacts } from "./contacts/contacts.js";
 import { Domains } from "./domains/domains.js";
 import { Emails } from "./emails/emails.js";
 import type {
@@ -9,8 +10,11 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
+import { Segments } from "./segments/segments.js";
 import { SenderIds } from "./sender-ids/sender-ids.js";
 import { Sms } from "./sms/sms.js";
+import { Suppressions } from "./suppressions/suppressions.js";
+import { Topics } from "./topics/topics.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
 const DEFAULT_USER_AGENT = `dugble-node/${version}`;
@@ -27,6 +31,10 @@ export class Dugble {
   readonly sms: Sms;
   readonly domains: Domains;
   readonly senderIds: SenderIds;
+  readonly contacts: Contacts;
+  readonly topics: Topics;
+  readonly segments: Segments;
+  readonly suppressions: Suppressions;
 
   readonly #apiKey: string;
 
@@ -44,6 +52,10 @@ export class Dugble {
     this.sms = new Sms(this);
     this.domains = new Domains(this);
     this.senderIds = new SenderIds(this);
+    this.contacts = new Contacts(this);
+    this.topics = new Topics(this);
+    this.segments = new Segments(this);
+    this.suppressions = new Suppressions(this);
   }
 
   async get<T>(
