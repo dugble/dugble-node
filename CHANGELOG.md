@@ -1,7 +1,12 @@
 # Changelog
 
-## 0.1.0
+All notable changes to this project will be documented in this file.
 
-- Initial public release of the Dugble Node SDK
-- Added basic client initialization and API key validation
-- Added initial test coverage
+## [Unreleased]
+
+### Added
+
+- Initial TypeScript SDK foundation.
+- API key validation.
+- Custom API base URL support.
+- Build, lint, test, and CI configuration.

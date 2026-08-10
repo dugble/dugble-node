@@ -13,11 +13,7 @@ npm install @dugble/sdk
 ```ts
 import { Dugble } from "@dugble/sdk";
 
-const client = new Dugble({
-  apiKey: process.env.DUGBLE_API_KEY ?? "",
-});
-
-console.log(client.baseUrl);
+const dugble = new Dugble("dug_test_example");
 ```
 
 ## Features
