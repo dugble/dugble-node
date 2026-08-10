@@ -12,7 +12,13 @@ import {
 } from "./types.js";
 
 export class Contacts {
-  constructor(private readonly client: Dugble) {}
+  readonly topics: ContactTopics;
+  readonly segments: ContactSegments;
+
+  constructor(private readonly client: Dugble) {
+    this.topics = new ContactTopics(client);
+    this.segments = new ContactSegments(client);
+  }
 
   create(
     payload: CreateContactOptions,
@@ -63,13 +69,5 @@ export class Contacts {
       `/contacts/${encodeURIComponent(id)}`,
       options,
     );
-  }
-
-  topics(id: string): ContactTopics {
-    return new ContactTopics(this.client, id);
-  }
-
-  segments(id: string): ContactSegments {
-    return new ContactSegments(this.client, id);
   }
 }
