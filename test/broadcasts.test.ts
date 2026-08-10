@@ -86,6 +86,26 @@ describe("Broadcasts", () => {
     );
   });
 
+  it("clears a broadcast topic with null", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(response({}));
+
+    const client = new Dugble("dgb_team_test");
+    await client.broadcasts.update("broadcast_123", {
+      revision: 5,
+      topicId: null,
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/broadcasts/broadcast_123",
+      expect.objectContaining({
+        method: "PATCH",
+        body: JSON.stringify({ revision: 5, topic_id: null }),
+      }),
+    );
+  });
+
   it("sends immediately without an unnecessary request body", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
