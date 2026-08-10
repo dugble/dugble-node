@@ -1,4 +1,5 @@
 import { version } from "../package.json";
+import { Domains } from "./domains/domains.js";
 import { Emails } from "./emails/emails.js";
 import type {
   DugbleErrorResponse,
@@ -8,6 +9,7 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
+import { SenderIds } from "./sender-ids/sender-ids.js";
 import { Sms } from "./sms/sms.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
@@ -23,13 +25,15 @@ export class Dugble {
   readonly userAgent: string;
   readonly emails: Emails;
   readonly sms: Sms;
+  readonly domains: Domains;
+  readonly senderIds: SenderIds;
 
   readonly #apiKey: string;
 
   constructor(apiKey: string, options: DugbleOptions = {}) {
     if (typeof apiKey !== "string" || !apiKey.trim()) {
       throw new TypeError(
-        'Missing API key. Pass it to the constructor: new Dugble("dug_123")',
+        'Missing API key. Pass it to the constructor: new Dugble("dgb_team_...")',
       );
     }
 
@@ -38,6 +42,8 @@ export class Dugble {
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.emails = new Emails(this);
     this.sms = new Sms(this);
+    this.domains = new Domains(this);
+    this.senderIds = new SenderIds(this);
   }
 
   async get<T>(
