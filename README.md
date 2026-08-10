@@ -329,6 +329,57 @@ dugble.campaigns.analytics(...);
 
 Campaign updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`. Setting `dailySendLimit` to `0` on an update clears an existing daily send limit.
 
+## Templates
+
+Create an email template:
+
+```ts
+const { data, error } = await dugble.templates.create({
+  name: "Welcome email",
+  alias: "welcome",
+  from: "Dugble <hello@example.com>",
+  subject: "Welcome, {{{first_name}}}",
+  html: "<h1>Welcome, {{{first_name}}}</h1>",
+  variables: [
+    {
+      key: "first_name",
+      type: "string",
+    },
+  ],
+});
+```
+
+Preview and publish the current template version:
+
+```ts
+await dugble.templates.preview("welcome", {
+  variables: { first_name: "Ada" },
+});
+
+await dugble.templates.publish("welcome");
+```
+
+Template version history is available as a nested resource:
+
+```ts
+dugble.templates.create(...);
+dugble.templates.list(...);
+dugble.templates.get(...);
+dugble.templates.update(...);
+dugble.templates.delete(...);
+
+dugble.templates.publish(...);
+dugble.templates.duplicate(...);
+dugble.templates.preview(...);
+dugble.templates.testSend(...);
+
+dugble.templates.versions.list(...);
+dugble.templates.versions.get(...);
+dugble.templates.versions.revert(...);
+```
+
+Template lists use cursor pagination with `after` and `before`. Version lists use offset pagination with `limit` and `offset`. Template identifiers may be IDs or aliases.
+
 ## Idempotency
 
 Dugble automatically generates an idempotency key for email and SMS send operations, including batch sends.
