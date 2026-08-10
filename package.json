@@ -23,11 +23,14 @@
   },
   "scripts": {
     "build": "tsup src/index.ts --format esm,cjs --dts --sourcemap --clean",
-    "lint": "eslint .",
+    "lint": "biome lint .",
     "test": "vitest run",
     "test:watch": "vitest",
-    "format": "prettier --write .",
-    "check": "npm run lint && npm test && npm run build"
+    "format": "biome format --write .",
+    "check": "biome check . && npm test && npm run build",
+    "format:check": "biome format .",
+    "check:write": "biome check --write .",
+    "ci": "biome ci ."
   },
   "repository": {
     "type": "git",
@@ -38,14 +41,11 @@
   },
   "homepage": "https://github.com/dugble/dugble-node#readme",
   "devDependencies": {
-    "@eslint/js": "^10.0.1",
+    "@biomejs/biome": "2.5.5",
     "@types/node": "^26.2.0",
     "@vitest/coverage-v8": "^4.1.10",
-    "eslint": "^10.8.1",
-    "prettier": "^3.9.6",
     "tsup": "^8.5.1",
     "typescript": "^6.0.3",
-    "typescript-eslint": "^8.66.0",
     "vitest": "^4.1.10"
   }
 }
