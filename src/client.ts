@@ -33,7 +33,7 @@ export class Dugble {
   constructor(apiKey: string, options: DugbleOptions = {}) {
     if (typeof apiKey !== "string" || !apiKey.trim()) {
       throw new TypeError(
-        'Missing API key. Pass it to the constructor: new Dugble("dug_123")',
+        'Missing API key. Pass it to the constructor: new Dugble("dgb_team_...")',
       );
     }
 
