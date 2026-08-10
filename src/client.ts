@@ -8,7 +8,7 @@ import type {
   RequestOptions,
   SuccessEnvelope,
 } from "./interfaces.js";
-import { SmsResource } from "./sms/sms.js";
+import { Sms } from "./sms/sms.js";
 
 const DEFAULT_BASE_URL = "https://api.dugble.com";
 const DEFAULT_USER_AGENT = `dugble-node/${version}`;
@@ -22,7 +22,7 @@ export class Dugble {
   readonly baseUrl: string;
   readonly userAgent: string;
   readonly emails: Emails;
-  readonly sms: SmsResource;
+  readonly sms: Sms;
 
   readonly #apiKey: string;
 
@@ -37,7 +37,7 @@ export class Dugble {
     this.baseUrl = (options.baseUrl ?? DEFAULT_BASE_URL).replace(/\/+$/, "");
     this.userAgent = options.userAgent ?? DEFAULT_USER_AGENT;
     this.emails = new Emails(this);
-    this.sms = new SmsResource(this);
+    this.sms = new Sms(this);
   }
 
   async get<T>(
