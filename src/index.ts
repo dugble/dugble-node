@@ -20,6 +20,28 @@ export type {
   UpdateBroadcastOptions,
   UpdateBroadcastRequest,
 } from "./broadcasts/types.js";
+export { Campaigns } from "./campaigns/campaigns.js";
+export type {
+  Campaign,
+  CampaignAnalytics,
+  CampaignCostEstimate,
+  CampaignExclusionReason,
+  CampaignExclusionSummary,
+  CampaignPreview,
+  CampaignRecipient,
+  CampaignRecipientStatus,
+  CampaignSmsEncoding,
+  CampaignStatus,
+  CreateCampaignOptions,
+  CreateCampaignRequest,
+  DuplicateCampaignOptions,
+  ListCampaignRecipientsOptions,
+  ListCampaignsOptions,
+  SendCampaignOptions,
+  SendCampaignRequest,
+  UpdateCampaignOptions,
+  UpdateCampaignRequest,
+} from "./campaigns/types.js";
 export type { DugbleOptions } from "./client.js";
 export { Dugble } from "./client.js";
 export { Contacts } from "./contacts/contacts.js";

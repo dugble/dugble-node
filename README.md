@@ -284,6 +284,51 @@ dugble.broadcasts.analytics(...);
 
 Broadcast updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`.
 
+## Campaigns
+
+Create an SMS campaign from a segment and approved sender ID:
+
+```ts
+const { data, error } = await dugble.campaigns.create({
+  name: "August SMS",
+  segmentId: "segment_123",
+  senderId: "sender_123",
+  body: "Your August update is ready.",
+});
+```
+
+Send it immediately or schedule it through the same send endpoint:
+
+```ts
+await dugble.campaigns.send("campaign_123");
+
+await dugble.campaigns.send("campaign_123", {
+  scheduledAt: new Date("2026-08-11T12:00:00Z"),
+});
+```
+
+The campaigns resource exposes:
+
+```ts
+dugble.campaigns.create(...);
+dugble.campaigns.list(...);
+dugble.campaigns.get(...);
+dugble.campaigns.update(...);
+dugble.campaigns.delete(...);
+
+dugble.campaigns.preview(...);
+dugble.campaigns.send(...);
+dugble.campaigns.cancel(...);
+dugble.campaigns.duplicate(...);
+
+dugble.campaigns.recipients(...);
+dugble.campaigns.costEstimate(...);
+dugble.campaigns.exclusions(...);
+dugble.campaigns.analytics(...);
+```
+
+Campaign updates require the current `revision`. Recipient lists use offset pagination with `limit` and `offset`. Setting `dailySendLimit` to `0` on an update clears an existing daily send limit.
+
 ## Idempotency
 
 Dugble automatically generates an idempotency key for email and SMS send operations, including batch sends.
