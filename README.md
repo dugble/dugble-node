@@ -23,7 +23,7 @@ npm install @dugble/sdk
 ```ts
 import { Dugble } from "@dugble/sdk";
 
-const dugble = new Dugble("dug_test_example");
+const dugble = new Dugble("dgb_team_your_api_key");
 ```
 
 ## Email
@@ -118,6 +118,50 @@ dugble.sms.cancel(...);
 dugble.sms.events(...);
 dugble.sms.syncStatus(...);
 dugble.sms.batch.send(...);
+```
+
+## Domains
+
+Create a sending domain:
+
+```ts
+const { data, error } = await dugble.domains.create({
+  name: "example.com",
+  region: "us-east-1",
+});
+```
+
+The domains resource exposes:
+
+```ts
+dugble.domains.create(...);
+dugble.domains.list(...);
+dugble.domains.get(...);
+dugble.domains.verify(...);
+dugble.domains.delete(...);
+```
+
+Domain creation can return either a domain resource or a provisioning response when Dugble is still preparing the email infrastructure for the team.
+
+## Sender IDs
+
+Create an SMS sender ID:
+
+```ts
+const { data, error } = await dugble.senderIds.create({
+  name: "Dugble",
+  countryCode: "GH",
+  purpose: "Transactional notifications",
+});
+```
+
+The sender IDs resource exposes:
+
+```ts
+dugble.senderIds.create(...);
+dugble.senderIds.list(...);
+dugble.senderIds.get(...);
+dugble.senderIds.delete(...);
 ```
 
 ## Idempotency
