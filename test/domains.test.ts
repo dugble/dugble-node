@@ -7,7 +7,7 @@ afterEach(() => {
 });
 
 describe("Domains", () => {
-  it("creates a domain with serialized options", async () => {
+  it("creates a domain with the supported configuration", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
@@ -19,11 +19,7 @@ describe("Domains", () => {
             region: "us-east-1",
             status: "pending",
             records: [],
-            open_tracking: true,
-            click_tracking: false,
-            tls: "opportunistic",
-            capabilities: { sending: true, receiving: false },
-            custom_return_path: "send",
+            tls: "enforced",
             health_status: "unknown",
             consecutive_health_failures: 0,
             created_at: "2026-08-10T00:00:00Z",
@@ -38,9 +34,7 @@ describe("Domains", () => {
     await client.domains.create({
       name: "example.com",
       region: "us-east-1",
-      openTracking: true,
-      clickTracking: false,
-      customReturnPath: "send",
+      tls: "enforced",
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
@@ -50,9 +44,33 @@ describe("Domains", () => {
         body: JSON.stringify({
           name: "example.com",
           region: "us-east-1",
-          custom_return_path: "send",
-          open_tracking: true,
-          click_tracking: false,
+          tls: "enforced",
+        }),
+      }),
+    );
+  });
+
+  it("omits tls when it is not provided", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: {} }), {
+        status: 201,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const client = new Dugble("dgb_team_test");
+    await client.domains.create({
+      name: "example.com",
+      region: "eu-north-1",
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/domains",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          name: "example.com",
+          region: "eu-north-1",
         }),
       }),
     );
