@@ -14,7 +14,7 @@ function response(data: unknown, status = 200): Response {
 }
 
 describe("Broadcasts", () => {
-  it("creates a broadcast with serialized audience fields", async () => {
+  it("creates a broadcast with owned message content", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(response({}, 201));
@@ -24,7 +24,13 @@ describe("Broadcasts", () => {
       name: "August update",
       segmentId: "segment_123",
       topicId: "topic_123",
-      template: "newsletter",
+      fromEmail: "news@example.com",
+      fromName: "Dugble",
+      replyToEmail: "support@example.com",
+      subject: "Hello {{first_name}}",
+      previewText: "Your August update",
+      html: "<h1>Hello {{{first_name}}}</h1>",
+      text: "Hello {{{first_name}}}",
       variableBindings: { company: "Dugble" },
     });
 
@@ -35,9 +41,44 @@ describe("Broadcasts", () => {
         body: JSON.stringify({
           name: "August update",
           segment_id: "segment_123",
-          template: "newsletter",
           topic_id: "topic_123",
+          from_email: "news@example.com",
+          from_name: "Dugble",
+          reply_to_email: "support@example.com",
+          subject: "Hello {{first_name}}",
+          preview_text: "Your August update",
+          html: "<h1>Hello {{{first_name}}}</h1>",
+          text: "Hello {{{first_name}}}",
           variable_bindings: { company: "Dugble" },
+        }),
+      }),
+    );
+  });
+
+  it("creates and schedules a broadcast in one request", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(response({}, 201));
+
+    const client = new Dugble("dgb_team_test");
+    await client.broadcasts.create({
+      segmentId: "segment_123",
+      subject: "Scheduled update",
+      html: "<p>Scheduled</p>",
+      send: true,
+      scheduledAt: new Date("2026-09-01T12:00:00.000Z"),
+    });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/broadcasts",
+      expect.objectContaining({
+        method: "POST",
+        body: JSON.stringify({
+          segment_id: "segment_123",
+          subject: "Scheduled update",
+          html: "<p>Scheduled</p>",
+          send: true,
+          scheduled_at: "2026-09-01T12:00:00.000Z",
         }),
       }),
     );
@@ -57,7 +98,7 @@ describe("Broadcasts", () => {
     );
   });
 
-  it("updates a draft using its revision", async () => {
+  it("updates draft content using its revision", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(response({}));
@@ -67,7 +108,8 @@ describe("Broadcasts", () => {
       revision: 4,
       name: "Updated name",
       segmentId: "segment_456",
-      template: "template_456",
+      subject: "Updated subject",
+      html: "<p>Updated body</p>",
       variableBindings: { plan: "pro" },
     });
 
@@ -79,14 +121,15 @@ describe("Broadcasts", () => {
           revision: 4,
           name: "Updated name",
           segment_id: "segment_456",
-          template: "template_456",
+          subject: "Updated subject",
+          html: "<p>Updated body</p>",
           variable_bindings: { plan: "pro" },
         }),
       }),
     );
   });
 
-  it("clears a broadcast topic with null", async () => {
+  it("clears nullable broadcast content with null", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(response({}));
@@ -95,13 +138,26 @@ describe("Broadcasts", () => {
     await client.broadcasts.update("broadcast_123", {
       revision: 5,
       topicId: null,
+      fromEmail: null,
+      fromName: null,
+      replyToEmail: null,
+      previewText: null,
+      text: null,
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/broadcasts/broadcast_123",
       expect.objectContaining({
         method: "PATCH",
-        body: JSON.stringify({ revision: 5, topic_id: null }),
+        body: JSON.stringify({
+          revision: 5,
+          topic_id: null,
+          from_email: null,
+          from_name: null,
+          reply_to_email: null,
+          preview_text: null,
+          text: null,
+        }),
       }),
     );
   });
@@ -128,14 +184,14 @@ describe("Broadcasts", () => {
 
     const client = new Dugble("dgb_team_test");
     await client.broadcasts.send("broadcast_123", {
-      scheduledAt: new Date("2026-08-11T12:00:00.000Z"),
+      scheduledAt: new Date("2026-09-01T12:00:00.000Z"),
     });
 
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/broadcasts/broadcast_123/send",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ scheduled_at: "2026-08-11T12:00:00.000Z" }),
+        body: JSON.stringify({ scheduled_at: "2026-09-01T12:00:00.000Z" }),
       }),
     );
   });
@@ -159,21 +215,19 @@ describe("Broadcasts", () => {
     );
   });
 
-  it("duplicates a broadcast into a new draft", async () => {
+  it("duplicates a broadcast and lets the backend default the name", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(response({}, 201));
 
     const client = new Dugble("dgb_team_test");
-    await client.broadcasts.duplicate("broadcast_123", {
-      name: "September update",
-    });
+    await client.broadcasts.duplicate("broadcast_123", {});
 
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/broadcasts/broadcast_123/duplicate",
       expect.objectContaining({
         method: "POST",
-        body: JSON.stringify({ name: "September update" }),
+        body: JSON.stringify({}),
       }),
     );
   });
