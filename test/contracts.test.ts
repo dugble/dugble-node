@@ -3,16 +3,24 @@ import { describe, expectTypeOf, it } from "vitest";
 import type {
   Broadcast,
   CreateBroadcastOptions,
+  CreateTemplateOptions,
   EmailAnalytics,
   EmailAttachment,
   ListDomainsOptions,
   ListEmailEventsOptions,
   ListSmsOptions,
+  ListTemplatesOptions,
   ListTopicsOptions,
   SegmentAudienceSize,
   SmsAnalytics,
+  Template,
+  TemplateCategory,
+  TemplateListItem,
+  TemplateRevertResponse,
+  TemplateTestSendResponse,
   UpdateBroadcastOptions,
   UpdateDomainOptions,
+  UpdateTemplateOptions,
 } from "../src/index.js";
 
 describe("synced public SDK contracts", () => {
@@ -43,6 +51,27 @@ describe("synced public SDK contracts", () => {
     expectTypeOf<CreateBroadcastOptions>().toHaveProperty("html");
     expectTypeOf<UpdateBroadcastOptions>().toHaveProperty("revision");
     expectTypeOf<Broadcast>().not.toHaveProperty("template_id");
+  });
+
+  it("matches the current template public contract", () => {
+    expectTypeOf<TemplateCategory>().toEqualTypeOf<
+      | "otp"
+      | "welcome"
+      | "receipt"
+      | "alert"
+      | "notification"
+      | "custom"
+    >();
+    expectTypeOf<CreateTemplateOptions>().toHaveProperty("category");
+    expectTypeOf<UpdateTemplateOptions>().toHaveProperty("category");
+    expectTypeOf<ListTemplatesOptions>().toMatchTypeOf<{
+      limit?: number;
+      offset?: number;
+    }>();
+    expectTypeOf<Template>().toHaveProperty("category");
+    expectTypeOf<TemplateListItem>().toHaveProperty("category");
+    expectTypeOf<TemplateRevertResponse>().toHaveProperty("category");
+    expectTypeOf<TemplateTestSendResponse["object"]>().toEqualTypeOf<"email">();
   });
 
   it("requires serializable email attachment content", () => {
