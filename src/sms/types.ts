@@ -87,7 +87,18 @@ export interface SmsAnalytics {
 export interface ListSmsOptions {
   limit?: number;
   offset?: number;
-  status?: "queued" | "processing" | "submitted" | "sent" | "delivered" | "undelivered" | "rejected" | "failed" | "expired" | "unknown" | "canceled";
+  status?:
+    | "queued"
+    | "processing"
+    | "submitted"
+    | "sent"
+    | "delivered"
+    | "undelivered"
+    | "rejected"
+    | "failed"
+    | "expired"
+    | "unknown"
+    | "canceled";
   sender?: string;
   startDate?: string;
   endDate?: string;
