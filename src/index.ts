@@ -149,6 +149,7 @@ export type {
   ListTemplateVersionsOptions,
   PreviewTemplateOptions,
   Template,
+  TemplateCategory,
   TemplateDeleteResponse,
   TemplateList,
   TemplateListItem,
