@@ -35,11 +35,19 @@ export class Sms {
     );
   }
 
-  get(id: string, options: RequestOptions = {}): Promise<DugbleResponse<SmsMessage>> {
-    return this.client.get<SmsMessage>(`/sms/${encodeURIComponent(id)}`, options);
+  get(
+    id: string,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<SmsMessage>> {
+    return this.client.get<SmsMessage>(
+      `/sms/${encodeURIComponent(id)}`,
+      options,
+    );
   }
 
-  analytics(options: RequestOptions = {}): Promise<DugbleResponse<SmsAnalytics>> {
+  analytics(
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<SmsAnalytics>> {
     return this.client.get<SmsAnalytics>("/sms/analytics", options);
   }
 
@@ -49,10 +57,12 @@ export class Sms {
   ): Promise<DugbleResponse<SmsMessage[]>> {
     const query = new URLSearchParams();
     if (payload.limit !== undefined) query.set("limit", String(payload.limit));
-    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
     if (payload.status !== undefined) query.set("status", payload.status);
     if (payload.sender !== undefined) query.set("sender", payload.sender);
-    if (payload.startDate !== undefined) query.set("start_date", payload.startDate);
+    if (payload.startDate !== undefined)
+      query.set("start_date", payload.startDate);
     if (payload.endDate !== undefined) query.set("end_date", payload.endDate);
     if (payload.search !== undefined) query.set("search", payload.search);
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
@@ -70,7 +80,10 @@ export class Sms {
     );
   }
 
-  cancel(id: string, options: RequestOptions = {}): Promise<DugbleResponse<SendSmsResponse>> {
+  cancel(
+    id: string,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<SendSmsResponse>> {
     return this.client.post<SendSmsResponse>(
       `/sms/${encodeURIComponent(id)}/cancel`,
       undefined,
@@ -92,7 +105,10 @@ export class Sms {
     );
   }
 
-  syncStatus(id: string, options: RequestOptions = {}): Promise<DugbleResponse<SmsMessage>> {
+  syncStatus(
+    id: string,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<SmsMessage>> {
     return this.client.post<SmsMessage>(
       `/sms/${encodeURIComponent(id)}/sync-status`,
       undefined,
