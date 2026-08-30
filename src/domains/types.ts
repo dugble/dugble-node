@@ -54,6 +54,15 @@ export interface CreateDomainOptions {
   tls?: DomainTlsMode;
 }
 
+export interface UpdateDomainOptions {
+  tls?: DomainTlsMode;
+}
+
+export interface ListDomainsOptions {
+  limit?: number;
+  offset?: number;
+}
+
 export interface DomainProvisioningResponse {
   status: "provisioning";
   message: string;
@@ -68,6 +77,10 @@ export interface CreateDomainRequest {
   tls?: DomainTlsMode;
 }
 
+export interface UpdateDomainRequest {
+  tls?: DomainTlsMode;
+}
+
 export function serializeCreateDomain(
   payload: CreateDomainOptions,
 ): CreateDomainRequest {
@@ -78,5 +91,13 @@ export function serializeCreateDomain(
 
   if (payload.tls !== undefined) result.tls = payload.tls;
 
+  return result;
+}
+
+export function serializeUpdateDomain(
+  payload: UpdateDomainOptions,
+): UpdateDomainRequest {
+  const result: UpdateDomainRequest = {};
+  if (payload.tls !== undefined) result.tls = payload.tls;
   return result;
 }
