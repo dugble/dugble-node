@@ -51,6 +51,44 @@ describe("SMS", () => {
     });
   });
 
+  it("gets SMS analytics", async () => {
+    const analytics = {
+      object: "sms.analytics",
+      windows: [
+        {
+          days: 30,
+          rates: [{ name: "delivery_rate", value: 0.95 }],
+          series: [
+            {
+              date: "2026-08-29",
+              total: 200,
+              delivered: 190,
+              failed: 10,
+            },
+          ],
+        },
+      ],
+      delivery_by_country: [
+        { country: "GH", total: 100, delivered: 98, failed: 2 },
+      ],
+    };
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: analytics }), {
+        status: 200,
+      }),
+    );
+
+    const client = new Dugble("dug_test_example");
+    const response = await client.sms.analytics();
+
+    expect(response.data).toEqual(analytics);
+    expect(response.error).toBeNull();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/sms/analytics",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
   it("gets an SMS", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ success: true, data: {} }), {
@@ -68,7 +106,7 @@ describe("SMS", () => {
     );
   });
 
-  it("lists SMS messages with pagination", async () => {
+  it("lists SMS messages with current filters", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ success: true, data: [] }), {
         status: 200,
@@ -77,10 +115,18 @@ describe("SMS", () => {
 
     const client = new Dugble("dug_test_example");
 
-    await client.sms.list({ limit: 25, offset: 50 });
+    await client.sms.list({
+      limit: 25,
+      offset: 50,
+      status: "delivered",
+      sender: "Dugble",
+      startDate: "2026-08-01T00:00:00Z",
+      endDate: "2026-08-30T23:59:59Z",
+      search: "+233555",
+    });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://api.dugble.com/sms?limit=25&offset=50",
+      "https://api.dugble.com/sms?limit=25&offset=50&status=delivered&sender=Dugble&start_date=2026-08-01T00%3A00%3A00Z&end_date=2026-08-30T23%3A59%3A59Z&search=%2B233555",
       expect.objectContaining({ method: "GET" }),
     );
   });
