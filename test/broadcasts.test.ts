@@ -34,25 +34,25 @@ describe("Broadcasts", () => {
       variableBindings: { company: "Dugble" },
     });
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "https://api.dugble.com/broadcasts",
-      expect.objectContaining({
-        method: "POST",
-        body: JSON.stringify({
-          name: "August update",
-          segment_id: "segment_123",
-          topic_id: "topic_123",
-          from_email: "news@example.com",
-          from_name: "Dugble",
-          reply_to_email: "support@example.com",
-          subject: "Hello {{first_name}}",
-          preview_text: "Your August update",
-          html: "<h1>Hello {{{first_name}}}</h1>",
-          text: "Hello {{{first_name}}}",
-          variable_bindings: { company: "Dugble" },
-        }),
-      }),
-    );
+    const call = fetchMock.mock.calls.at(0);
+    if (!call) throw new Error("Expected fetch to be called once.");
+
+    const [url, options] = call;
+    expect(url).toBe("https://api.dugble.com/broadcasts");
+    expect(options?.method).toBe("POST");
+    expect(JSON.parse(String(options?.body))).toEqual({
+      segment_id: "segment_123",
+      subject: "Hello {{first_name}}",
+      html: "<h1>Hello {{{first_name}}}</h1>",
+      name: "August update",
+      topic_id: "topic_123",
+      from_email: "news@example.com",
+      from_name: "Dugble",
+      reply_to_email: "support@example.com",
+      preview_text: "Your August update",
+      text: "Hello {{{first_name}}}",
+      variable_bindings: { company: "Dugble" },
+    });
   });
 
   it("creates and schedules a broadcast in one request", async () => {
