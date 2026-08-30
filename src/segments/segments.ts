@@ -5,6 +5,7 @@ import type {
   ListSegmentContactsOptions,
   ListSegmentsOptions,
   Segment,
+  SegmentAudienceSize,
   SegmentContact,
 } from "./types.js";
 
@@ -36,6 +37,16 @@ export class Segments {
   ): Promise<DugbleResponse<Segment>> {
     return this.client.get<Segment>(
       `/segments/${encodeURIComponent(id)}`,
+      options,
+    );
+  }
+
+  audienceSize(
+    id: string,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<SegmentAudienceSize>> {
+    return this.client.get<SegmentAudienceSize>(
+      `/segments/${encodeURIComponent(id)}/audience-size`,
       options,
     );
   }
