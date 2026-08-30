@@ -55,12 +55,7 @@ describe("synced public SDK contracts", () => {
 
   it("matches the current template public contract", () => {
     expectTypeOf<TemplateCategory>().toEqualTypeOf<
-      | "otp"
-      | "welcome"
-      | "receipt"
-      | "alert"
-      | "notification"
-      | "custom"
+      "otp" | "welcome" | "receipt" | "alert" | "notification" | "custom"
     >();
     expectTypeOf<CreateTemplateOptions>().toHaveProperty("category");
     expectTypeOf<UpdateTemplateOptions>().toHaveProperty("category");
