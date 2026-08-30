@@ -6,9 +6,8 @@ export type EmailAddress =
     };
 
 export interface EmailAttachment {
-  content?: string;
-  filename?: string;
-  path?: string;
+  content: string;
+  filename: string;
   contentType?: string;
   contentId?: string;
 }
@@ -84,8 +83,34 @@ export interface EmailEventList {
   data: EmailEvent[];
 }
 
+export interface EmailAnalyticsRate {
+  name: string;
+  value: number;
+}
+
+export interface EmailAnalyticsPoint {
+  date: string;
+  total: number;
+  delivered: number;
+  opened: number;
+  clicked: number;
+  bounced: number;
+}
+
+export interface EmailAnalyticsWindow {
+  days: number;
+  rates: EmailAnalyticsRate[];
+  series: EmailAnalyticsPoint[];
+}
+
+export interface EmailAnalytics {
+  object: "email.analytics";
+  windows: EmailAnalyticsWindow[];
+}
+
 export interface ListEmailEventsOptions {
   limit?: number;
+  offset?: number;
 }
 
 export interface ListEmailsOptions {
@@ -104,9 +129,8 @@ export interface MutationResponse {
 }
 
 interface EmailAttachmentRequest {
-  content?: string;
-  filename?: string;
-  path?: string;
+  content: string;
+  filename: string;
   content_type?: string;
   content_id?: string;
 }
@@ -130,11 +154,11 @@ export interface SendEmailRequest {
 function serializeAttachment(
   attachment: EmailAttachment,
 ): EmailAttachmentRequest {
-  const result: EmailAttachmentRequest = {};
+  const result: EmailAttachmentRequest = {
+    content: attachment.content,
+    filename: attachment.filename,
+  };
 
-  if (attachment.content !== undefined) result.content = attachment.content;
-  if (attachment.filename !== undefined) result.filename = attachment.filename;
-  if (attachment.path !== undefined) result.path = attachment.path;
   if (attachment.contentType !== undefined) {
     result.content_type = attachment.contentType;
   }
