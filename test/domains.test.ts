@@ -76,6 +76,63 @@ describe("Domains", () => {
     );
   });
 
+  it("lists domains with offset pagination", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: [] }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const client = new Dugble("dgb_team_test");
+    await client.domains.list({ limit: 25, offset: 50 });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/domains?limit=25&offset=50",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
+  it("updates TLS mode for an encoded domain id", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: {} }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const client = new Dugble("dgb_team_test");
+    await client.domains.update("domain/123", { tls: "opportunistic" });
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/domains/domain%2F123",
+      expect.objectContaining({
+        method: "PATCH",
+        body: JSON.stringify({ tls: "opportunistic" }),
+      }),
+    );
+  });
+
+  it("allows an empty domain update payload", async () => {
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: {} }), {
+        status: 200,
+        headers: { "Content-Type": "application/json" },
+      }),
+    );
+
+    const client = new Dugble("dgb_team_test");
+    await client.domains.update("domain_123", {});
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/domains/domain_123",
+      expect.objectContaining({
+        method: "PATCH",
+        body: JSON.stringify({}),
+      }),
+    );
+  });
+
   it("verifies an encoded domain id", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(JSON.stringify({ success: true, data: {} }), {
