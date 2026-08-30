@@ -14,7 +14,7 @@ function response(data: unknown, status = 200): Response {
 }
 
 describe("Templates", () => {
-  it("creates a template with serialized variables", async () => {
+  it("creates a categorized template with serialized variables", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(response({}));
@@ -23,6 +23,7 @@ describe("Templates", () => {
     await client.templates.create({
       name: "Welcome email",
       alias: "welcome",
+      category: "welcome",
       from: "Dugble <hello@example.com>",
       subject: "Welcome, {{{first_name}}}",
       html: "<h1>Welcome, {{{first_name}}}</h1>",
@@ -43,6 +44,7 @@ describe("Templates", () => {
         body: JSON.stringify({
           name: "Welcome email",
           html: "<h1>Welcome, {{{first_name}}}</h1>",
+          category: "welcome",
           alias: "welcome",
           from: "Dugble <hello@example.com>",
           subject: "Welcome, {{{first_name}}}",
@@ -59,7 +61,7 @@ describe("Templates", () => {
     );
   });
 
-  it("lists templates with cursor pagination", async () => {
+  it("lists templates with offset pagination", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(
@@ -67,10 +69,10 @@ describe("Templates", () => {
       );
 
     const client = new Dugble("dgb_team_test");
-    await client.templates.list({ limit: 20, after: "template_123" });
+    await client.templates.list({ limit: 20, offset: 40 });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://api.dugble.com/templates?limit=20&after=template_123",
+      "https://api.dugble.com/templates?limit=20&offset=40",
       expect.objectContaining({ method: "GET" }),
     );
   });
@@ -106,6 +108,7 @@ describe("Templates", () => {
     await client.templates.update("welcome", {
       name: "Welcome v2",
       alias: "welcome-v2",
+      category: "notification",
       from: "Team <team@example.com>",
       subject: "Hello {{{first_name}}}",
       html: "<p>Hello {{{first_name}}}</p>",
@@ -122,6 +125,7 @@ describe("Templates", () => {
           name: "Welcome v2",
           html: "<p>Hello {{{first_name}}}</p>",
           alias: "welcome-v2",
+          category: "notification",
           from: "Team <team@example.com>",
           subject: "Hello {{{first_name}}}",
           reply_to: [],
@@ -197,15 +201,16 @@ describe("Templates", () => {
   it("sends a template test email", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
-      .mockResolvedValue(response({}, 202));
+      .mockResolvedValue(response({ object: "email", id: "email_123" }, 202));
 
     const client = new Dugble("dgb_team_test");
-    await client.templates.testSend("welcome", {
+    const result = await client.templates.testSend("welcome", {
       to: "ada@example.com",
       versionId: "version_123",
       variables: { first_name: "Ada" },
     });
 
+    expect(result.data).toEqual({ object: "email", id: "email_123" });
     expect(fetchMock).toHaveBeenCalledWith(
       "https://api.dugble.com/templates/welcome/test-send",
       expect.objectContaining({
