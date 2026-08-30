@@ -7,6 +7,7 @@ import type {
 import { EmailBatch } from "./batch.js";
 import {
   type Email,
+  type EmailAnalytics,
   type EmailEventList,
   type EmailSummary,
   type ListEmailEventsOptions,
@@ -25,83 +26,39 @@ export class Emails {
     this.batch = new EmailBatch(client);
   }
 
-  send(
-    payload: SendEmailOptions,
-    options: IdempotentRequestOptions = {},
-  ): Promise<DugbleResponse<SendEmailResponse>> {
-    return this.client.idempotentPost<SendEmailResponse>(
-      "/emails",
-      serializeSendEmail(payload),
-      options,
-    );
+  send(payload: SendEmailOptions, options: IdempotentRequestOptions = {}): Promise<DugbleResponse<SendEmailResponse>> {
+    return this.client.idempotentPost<SendEmailResponse>("/emails", serializeSendEmail(payload), options);
   }
 
-  get(
-    id: string,
-    options: RequestOptions = {},
-  ): Promise<DugbleResponse<Email>> {
+  get(id: string, options: RequestOptions = {}): Promise<DugbleResponse<Email>> {
     return this.client.get<Email>(`/emails/${encodeURIComponent(id)}`, options);
   }
 
-  events(
-    id: string,
-    payload: ListEmailEventsOptions = {},
-    options: RequestOptions = {},
-  ): Promise<DugbleResponse<EmailEventList>> {
-    const query = new URLSearchParams();
-
-    if (payload.limit !== undefined) {
-      query.set("limit", String(payload.limit));
-    }
-
-    const suffix = query.size > 0 ? `?${query.toString()}` : "";
-
-    return this.client.get<EmailEventList>(
-      `/emails/${encodeURIComponent(id)}/events${suffix}`,
-      options,
-    );
+  analytics(options: RequestOptions = {}): Promise<DugbleResponse<EmailAnalytics>> {
+    return this.client.get<EmailAnalytics>("/emails/analytics", options);
   }
 
-  list(
-    payload: ListEmailsOptions = {},
-    options: RequestOptions = {},
-  ): Promise<DugbleResponse<EmailSummary[]>> {
+  events(id: string, payload: ListEmailEventsOptions = {}, options: RequestOptions = {}): Promise<DugbleResponse<EmailEventList>> {
     const query = new URLSearchParams();
-
-    if (payload.limit !== undefined) {
-      query.set("limit", String(payload.limit));
-    }
-
-    if (payload.offset !== undefined) {
-      query.set("offset", String(payload.offset));
-    }
-
+    if (payload.limit !== undefined) query.set("limit", String(payload.limit));
+    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
+    return this.client.get<EmailEventList>(`/emails/${encodeURIComponent(id)}/events${suffix}`, options);
+  }
 
+  list(payload: ListEmailsOptions = {}, options: RequestOptions = {}): Promise<DugbleResponse<EmailSummary[]>> {
+    const query = new URLSearchParams();
+    if (payload.limit !== undefined) query.set("limit", String(payload.limit));
+    if (payload.offset !== undefined) query.set("offset", String(payload.offset));
+    const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<EmailSummary[]>(`/emails${suffix}`, options);
   }
 
-  update(
-    payload: UpdateEmailOptions,
-    options: RequestOptions = {},
-  ): Promise<DugbleResponse<MutationResponse>> {
-    return this.client.patch<MutationResponse>(
-      `/emails/${encodeURIComponent(payload.id)}`,
-      {
-        scheduled_at: payload.scheduledAt,
-      },
-      options,
-    );
+  update(payload: UpdateEmailOptions, options: RequestOptions = {}): Promise<DugbleResponse<MutationResponse>> {
+    return this.client.patch<MutationResponse>(`/emails/${encodeURIComponent(payload.id)}`, { scheduled_at: payload.scheduledAt }, options);
   }
 
-  cancel(
-    id: string,
-    options: RequestOptions = {},
-  ): Promise<DugbleResponse<MutationResponse>> {
-    return this.client.post<MutationResponse>(
-      `/emails/${encodeURIComponent(id)}/cancel`,
-      undefined,
-      options,
-    );
+  cancel(id: string, options: RequestOptions = {}): Promise<DugbleResponse<MutationResponse>> {
+    return this.client.post<MutationResponse>(`/emails/${encodeURIComponent(id)}/cancel`, undefined, options);
   }
 }
