@@ -53,9 +53,45 @@ export interface SmsEventList {
   data: SmsEvent[];
 }
 
+export interface SmsAnalyticsRate {
+  name: string;
+  value: number;
+}
+
+export interface SmsAnalyticsPoint {
+  date: string;
+  total: number;
+  delivered: number;
+  failed: number;
+}
+
+export interface SmsAnalyticsWindow {
+  days: number;
+  rates: SmsAnalyticsRate[];
+  series: SmsAnalyticsPoint[];
+}
+
+export interface SmsCountryAnalytics {
+  country: string;
+  total: number;
+  delivered: number;
+  failed: number;
+}
+
+export interface SmsAnalytics {
+  object: "sms.analytics";
+  windows: SmsAnalyticsWindow[];
+  delivery_by_country: SmsCountryAnalytics[];
+}
+
 export interface ListSmsOptions {
   limit?: number;
   offset?: number;
+  status?: "queued" | "processing" | "submitted" | "sent" | "delivered" | "undelivered" | "rejected" | "failed" | "expired" | "unknown" | "canceled";
+  sender?: string;
+  startDate?: string;
+  endDate?: string;
+  search?: string;
 }
 
 export interface ListSmsEventsOptions {
