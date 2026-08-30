@@ -87,6 +87,43 @@ describe("Emails", () => {
     });
   });
 
+  it("gets email analytics", async () => {
+    const analytics = {
+      object: "email.analytics",
+      windows: [
+        {
+          days: 7,
+          rates: [{ name: "delivery_rate", value: 0.98 }],
+          series: [
+            {
+              date: "2026-08-29",
+              total: 100,
+              delivered: 98,
+              opened: 60,
+              clicked: 20,
+              bounced: 2,
+            },
+          ],
+        },
+      ],
+    };
+    const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(JSON.stringify({ success: true, data: analytics }), {
+        status: 200,
+      }),
+    );
+
+    const client = new Dugble("dug_test_example");
+    const response = await client.emails.analytics();
+
+    expect(response.data).toEqual(analytics);
+    expect(response.error).toBeNull();
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/emails/analytics",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
   it("unwraps successful API envelopes", async () => {
     vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
