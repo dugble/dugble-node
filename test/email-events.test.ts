@@ -7,7 +7,7 @@ afterEach(() => {
 });
 
 describe("Email events", () => {
-  it("lists email events with a limit", async () => {
+  it("lists email events with limit and offset", async () => {
     const fetchMock = vi.spyOn(globalThis, "fetch").mockResolvedValue(
       new Response(
         JSON.stringify({
@@ -30,7 +30,10 @@ describe("Email events", () => {
 
     const client = new Dugble("dug_test_example");
 
-    const response = await client.emails.events("email_123", { limit: 20 });
+    const response = await client.emails.events("email_123", {
+      limit: 20,
+      offset: 40,
+    });
 
     expect(response.error).toBeNull();
     expect(response.data).toEqual({
@@ -45,7 +48,7 @@ describe("Email events", () => {
       ],
     });
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://api.dugble.com/emails/email_123/events?limit=20",
+      "https://api.dugble.com/emails/email_123/events?limit=20&offset=40",
       expect.objectContaining({ method: "GET" }),
     );
   });

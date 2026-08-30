@@ -5,6 +5,11 @@ export interface Segment {
   created_at: string;
 }
 
+export interface SegmentAudienceSize {
+  segment_id: string;
+  count: number;
+}
+
 export interface SegmentContact {
   id: string;
   team_id: string;

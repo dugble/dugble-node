@@ -4,7 +4,10 @@ import {
   type CreateDomainOptions,
   type CreateDomainResponse,
   type Domain,
+  type ListDomainsOptions,
   serializeCreateDomain,
+  serializeUpdateDomain,
+  type UpdateDomainOptions,
 } from "./types.js";
 
 export class Domains {
@@ -21,8 +24,16 @@ export class Domains {
     );
   }
 
-  list(options: RequestOptions = {}): Promise<DugbleResponse<Domain[]>> {
-    return this.client.get<Domain[]>("/domains", options);
+  list(
+    payload: ListDomainsOptions = {},
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<Domain[]>> {
+    const query = new URLSearchParams();
+    if (payload.limit !== undefined) query.set("limit", String(payload.limit));
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
+    const suffix = query.size > 0 ? `?${query.toString()}` : "";
+    return this.client.get<Domain[]>(`/domains${suffix}`, options);
   }
 
   get(
@@ -31,6 +42,18 @@ export class Domains {
   ): Promise<DugbleResponse<Domain>> {
     return this.client.get<Domain>(
       `/domains/${encodeURIComponent(id)}`,
+      options,
+    );
+  }
+
+  update(
+    id: string,
+    payload: UpdateDomainOptions,
+    options: RequestOptions = {},
+  ): Promise<DugbleResponse<Domain>> {
+    return this.client.patch<Domain>(
+      `/domains/${encodeURIComponent(id)}`,
+      serializeUpdateDomain(payload),
       options,
     );
   }

@@ -1,4 +1,11 @@
 export type TemplateStatus = "draft" | "published";
+export type TemplateCategory =
+  | "otp"
+  | "welcome"
+  | "receipt"
+  | "alert"
+  | "notification"
+  | "custom";
 export type TemplateVariableType = "string" | "number";
 export type TemplateVariableFallback = string | number;
 
@@ -29,6 +36,7 @@ export interface Template {
   current_version_id: string;
   alias: string | null;
   name: string;
+  category: TemplateCategory;
   created_at: string;
   updated_at: string;
   status: TemplateStatus;
@@ -45,6 +53,7 @@ export interface Template {
 export interface TemplateListItem {
   id: string;
   name: string;
+  category: TemplateCategory;
   status: TemplateStatus;
   published_at: string | null;
   created_at: string;
@@ -95,6 +104,7 @@ export interface TemplateRevertResponse {
   team_id: string;
   name: string;
   alias: string | null;
+  category: TemplateCategory;
   current_version_id?: string;
   published_version_id?: string;
   published_at?: string;
@@ -115,13 +125,14 @@ export interface TemplatePreview {
 }
 
 export interface TemplateTestSendResponse {
-  object: string;
+  object: "email";
   id: string;
 }
 
 export interface CreateTemplateOptions {
   name: string;
   html: string;
+  category: TemplateCategory;
   alias?: string;
   from?: string;
   subject?: string;
@@ -134,6 +145,7 @@ export interface UpdateTemplateOptions {
   name?: string;
   html?: string;
   alias?: string;
+  category?: TemplateCategory;
   from?: string;
   subject?: string;
   replyTo?: string | string[];
@@ -143,8 +155,7 @@ export interface UpdateTemplateOptions {
 
 export interface ListTemplatesOptions {
   limit?: number;
-  after?: string;
-  before?: string;
+  offset?: number;
 }
 
 export interface ListTemplateVersionsOptions {
@@ -166,6 +177,7 @@ export interface TestSendTemplateOptions {
 export interface CreateTemplateRequest {
   name: string;
   html: string;
+  category: TemplateCategory;
   alias?: string;
   from?: string;
   subject?: string;
@@ -178,6 +190,7 @@ export interface UpdateTemplateRequest {
   name?: string;
   html?: string;
   alias?: string;
+  category?: TemplateCategory;
   from?: string;
   subject?: string;
   reply_to?: string | string[];
@@ -202,6 +215,7 @@ export function serializeCreateTemplate(
   const result: CreateTemplateRequest = {
     name: payload.name,
     html: payload.html,
+    category: payload.category,
   };
 
   if (payload.alias !== undefined) result.alias = payload.alias;
@@ -224,6 +238,7 @@ export function serializeUpdateTemplate(
   if (payload.name !== undefined) result.name = payload.name;
   if (payload.html !== undefined) result.html = payload.html;
   if (payload.alias !== undefined) result.alias = payload.alias;
+  if (payload.category !== undefined) result.category = payload.category;
   if (payload.from !== undefined) result.from = payload.from;
   if (payload.subject !== undefined) result.subject = payload.subject;
   if (payload.replyTo !== undefined) result.reply_to = payload.replyTo;

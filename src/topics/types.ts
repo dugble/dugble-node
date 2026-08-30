@@ -41,8 +41,7 @@ export interface UpdateTopicOptions {
 
 export interface ListTopicsOptions {
   limit?: number;
-  after?: string;
-  before?: string;
+  offset?: number;
 }
 
 export interface CreateTopicRequest {

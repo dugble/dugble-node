@@ -32,8 +32,8 @@ export class Topics {
   ): Promise<DugbleResponse<TopicList>> {
     const query = new URLSearchParams();
     if (payload.limit !== undefined) query.set("limit", String(payload.limit));
-    if (payload.after !== undefined) query.set("after", payload.after);
-    if (payload.before !== undefined) query.set("before", payload.before);
+    if (payload.offset !== undefined)
+      query.set("offset", String(payload.offset));
     const suffix = query.size > 0 ? `?${query.toString()}` : "";
     return this.client.get<TopicList>(`/topics${suffix}`, options);
   }

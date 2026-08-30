@@ -139,7 +139,7 @@ describe("Audiences", () => {
     expect(removed.error).toBeNull();
   });
 
-  it("lists topics with cursor pagination", async () => {
+  it("lists topics with offset pagination", async () => {
     const fetchMock = vi
       .spyOn(globalThis, "fetch")
       .mockResolvedValue(
@@ -147,10 +147,25 @@ describe("Audiences", () => {
       );
 
     const client = new Dugble("dgb_team_test");
-    await client.topics.list({ limit: 20, before: "topic_123" });
+    await client.topics.list({ limit: 20, offset: 40 });
 
     expect(fetchMock).toHaveBeenCalledWith(
-      "https://api.dugble.com/topics?limit=20&before=topic_123",
+      "https://api.dugble.com/topics?limit=20&offset=40",
+      expect.objectContaining({ method: "GET" }),
+    );
+  });
+
+  it("gets a segment audience size", async () => {
+    const fetchMock = vi
+      .spyOn(globalThis, "fetch")
+      .mockResolvedValue(response({ segment_id: "segment_123", count: 42 }));
+
+    const client = new Dugble("dgb_team_test");
+    const result = await client.segments.audienceSize("segment/123");
+
+    expect(result.data).toEqual({ segment_id: "segment_123", count: 42 });
+    expect(fetchMock).toHaveBeenCalledWith(
+      "https://api.dugble.com/segments/segment%2F123/audience-size",
       expect.objectContaining({ method: "GET" }),
     );
   });
